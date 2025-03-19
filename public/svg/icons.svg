@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <!-- Иконка крестика -->
+<symbol id="icon-close-modal" viewBox="0 0 24 24">
+    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+
+  <!-- Иконка для трех точек -->
+<symbol id="icon-vertical-dots" viewBox="0 0 24 24">
+    <circle cx="12" cy="5" r="2"></circle>
+    <circle cx="12" cy="12" r="2"></circle>
+    <circle cx="12" cy="19" r="2"></circle>
+</symbol>
+
+    <!-- Иконка для "-" -->
+<symbol id="icon-minus" viewBox="0 0 24 24">
+  <path d="M3 12h18" fill="currentColor" stroke="currentColor" stroke-width="2"></path>
+</symbol>
+    <!-- Иконка для "+" -->
+<symbol id="icon-plus" viewBox="0 0 24 24">
+  <path d="M12 3v18m9-9H3" fill="currentColor" stroke="currentColor" stroke-width="2"></path>
+</symbol>
+
+
+
+</svg>
+
+

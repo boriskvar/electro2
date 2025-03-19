@@ -1,0 +1,43 @@
+.admin-dashboard {
+    display: flex; /* Устанавливаем flex-контейнер */
+    flex-direction: row; /* Элементы располагаются в строку */
+    height: 100vh; /* Высота контейнера на весь экран */
+}
+
+.sidebar {
+    width: 250px; /* Фиксированная ширина сайдбара */
+    background-color: #f4f4f4; /* Светлый фон для сайдбара */
+    padding: 20px; /* Отступы внутри сайдбара */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Тень для отделения сайдбара */
+}
+
+.sidebar ul {
+    list-style: none; /* Убираем стандартные точки у списка */
+    padding: 0; /* Убираем отступы у списка */
+    margin: 0; /* Убираем отступы */
+}
+
+.sidebar ul li {
+    margin-bottom: 15px; /* Отступы между пунктами меню */
+}
+
+.sidebar ul li a {
+    text-decoration: none; /* Убираем подчеркивание ссылок */
+    color: #333; /* Цвет текста */
+    font-weight: bold; /* Жирный текст */
+}
+
+.sidebar ul li a:hover {
+    color: #007bff; /* Цвет текста при наведении */
+}
+
+.content {
+    flex-grow: 1; /* Основной контент занимает всё оставшееся пространство */
+    padding: 20px; /* Отступы внутри контента */
+    background-color: #fff; /* Белый фон для контента */
+}
+
+.welcome-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
