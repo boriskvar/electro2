@@ -10,7 +10,7 @@ class Cart extends Model
     use HasFactory;
 
     // Укажите имя таблицы
-    protected $table = 'cart';
+    protected $table = 'carts';
 
     // Укажите, если у вас есть поля, которые не являются временными метками
     public $timestamps = false;
