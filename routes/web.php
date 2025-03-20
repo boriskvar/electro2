@@ -50,9 +50,9 @@ Route::group([], function () {
 
 
 // Маршруты Breeze
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('welcome');
-});
+}); */
 
 Route::get('/dashboard', function () {
     return view('dashboard');
