@@ -146,14 +146,14 @@
                 <li class="{{ request()->is('admin/categories*') ? 'active' : '' }}">
                     <a href="{{ route('admin.categories.index') }}">Категории</a>
                 </li>
-                <li class="{{ request()->is('admin/products*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.products.index') }}">Товары</a>
+                <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.pages.index') }}">Страницы</a>
                 </li>
                 <li class="{{ request()->is('admin/menus*') ? 'active' : '' }}">
                     <a href="{{ route('admin.menus.index') }}">Меню</a>
                 </li>
-                <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.pages.index') }}">Страницы</a>
+                <li class="{{ request()->is('admin/products*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.products.index') }}">Товары</a>
                 </li>
                 <li class="{{ request()->is('admin/cart*') ? 'active' : '' }}">
                     <a href="{{ route('admin.cart.index') }}">Корзина</a>

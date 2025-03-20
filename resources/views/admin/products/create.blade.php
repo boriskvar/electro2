@@ -45,7 +45,7 @@
 
         <!-- Поле Меню -->
         <div class="form-group">
-            <label for="menu_id">Меню:</label>
+            <label for="menu_id">Меню (необязательно):</label>
             <select class="form-control" id="menu_id" name="menu_id">
                 <option value="">Выберите меню</option>
                 @foreach ($menus as $menu)

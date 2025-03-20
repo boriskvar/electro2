@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('details')->nullable(); // Поле для детальной информации
             $table->decimal('price', 8, 2); // Основная цена
             $table->decimal('old_price', 8, 2)->nullable(); // Старая цена (если есть скидка)
-            $table->decimal('discount_percentage', 3, 2)->nullable(); // Процент скидки
+            $table->decimal('discount_percentage', 5, 2)->nullable(); // Процент скидки
             $table->decimal('rating', 2, 1)->nullable(); // Средний рейтинг (например, 4.5)
             $table->integer('reviews_count')->default(0); // Количество отзывов
             $table->integer('views_count')->default(0); // Количество просмотров продукта
