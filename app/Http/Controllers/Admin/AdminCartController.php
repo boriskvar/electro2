@@ -27,7 +27,8 @@ class AdminCartController extends Controller
 
         $cartIsEmpty = empty($cart);
 
-        // dd($cart);
+        // dd($cartIsEmpty);  // false
+        // dd($cart); //#items: []
         // dd($products->toArray());
         return view('admin.cart.index', compact('cart', 'products', 'cartIsEmpty'));
     }
@@ -68,6 +69,7 @@ class AdminCartController extends Controller
 
         // $cart = session()->get('cart', []);
         $userId = Auth::id();
+        // dd($userId);
         $cart = Cart::where('user_id', $userId)->where('product_id', $productId)->first();
         // dd($cart);
         // Если товар уже есть в корзине, увеличиваем количество
@@ -206,7 +208,7 @@ class AdminCartController extends Controller
             // Добавляем товар в order_items
             $order->orderItems()->create([
                 'product_id' => $productId,
-                'cart_quantity' => $item['quantity'],
+                'quantity' => $item['quantity'],
                 'price_x_quantity' => $item['price_x_quantity'],
             ]);
         } */
@@ -216,7 +218,7 @@ class AdminCartController extends Controller
             $totalPrice += $item->price_x_quantity;
             $order->orderItems()->create([
                 'product_id' => $item->product_id,
-                'cart_quantity' => $item->quantity,
+                'quantity' => $item->quantity,
                 'price_x_quantity' => $item->price_x_quantity,
             ]);
             $item->delete();

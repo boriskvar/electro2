@@ -10,7 +10,7 @@ class Cart extends Model
     use HasFactory;
 
     // Укажите имя таблицы
-    protected $table = 'carts';
+    protected $table = 'cart';
 
     // Укажите, если у вас есть поля, которые не являются временными метками
     public $timestamps = false;
@@ -32,7 +32,7 @@ class Cart extends Model
     // Связь с таблицей 'products'
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function getDiscountPercentageAttribute()

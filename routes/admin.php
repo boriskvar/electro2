@@ -20,7 +20,7 @@ use App\Http\Controllers\Admin\SearchAnalyticsController;
 
 
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
@@ -131,7 +131,7 @@ Route::prefix('admin')->group(function () {
         // Route::post('/store', [AdminCartController::class, 'store'])->name('admin.cart.store'); // Создать запись корзины (добавить товар)
         // Route::get('/edit/{productId}', [AdminCartController::class, 'edit'])->name('admin.cart.edit'); // Страница редактирования корзины
         // Route::put('/update/{productId}', [AdminCartController::class, 'update'])->name('admin.cart.update'); // Обновить товар в корзине
-        Route::delete('/remove/{productId}', [AdminCartController::class, 'remove'])->name('admin.cart.remove'); // Удалить товар из корзины
+        Route::delete('/remove/{cart}', [AdminCartController::class, 'remove'])->name('admin.cart.remove'); // Удалить товар из корзины
 
         Route::post('/checkout', [AdminCartController::class, 'checkout'])->name('admin.cart.checkout');
     });
