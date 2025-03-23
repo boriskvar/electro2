@@ -27,8 +27,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    /* public function boot(): void
     {
+                // Проверяем, существуют ли таблицы перед выполнением запросов
+                if (Schema::hasTable('menus') && Schema::hasTable('categories') && Schema::hasTable('pages')) {
+            
         // Загружаем только активные меню
         $menus = Menu::where('is_active', 1)
             ->orderBy('position')
@@ -90,5 +93,5 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('wishlistCount', $wishlistCount);
         });
-    }
+    } */
 }
