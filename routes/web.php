@@ -51,14 +51,6 @@ Route::group([], function () {
 });
 
 // Маршруты Breeze (Личный кабинет и авторизация)
-/* Route::get('/', function () {
-    return view('welcome');
-}); */
-
-/* Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
- */
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard'); // Можно заменить на My Account
