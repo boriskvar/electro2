@@ -1,7 +1,7 @@
-@extends('layouts.layout')
+@extends('layouts.main')
 
 @section('content')
-  <h1>О нас</h1>
+<h1>О нас</h1>
 
-  <p> текст о нас</p>
+<p> текст о нас</p>
 @endsection
