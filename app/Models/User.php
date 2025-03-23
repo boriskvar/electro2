@@ -45,4 +45,23 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class, 'user_id');
+    }
+
+    // Связь с контактами
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
+    /**
+     * Связь с таблицей поисковых запросов (один ко многим).
+     */
+    public function searchQueries()
+    {
+        return $this->hasMany(SearchQuery::class);
+    }
 }
