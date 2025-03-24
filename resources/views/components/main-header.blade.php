@@ -38,78 +38,78 @@
                </div>
                <!-- /SEARCH BAR -->
                {{-- {{ dd($wishlistCount) }} --}}
-               <div class="qty" id="wishlist-count">
+               {{-- <div class="qty" id="wishlist-count">
                    {{ $wishlistCount }}
-               </div>
+           </div> --}}
 
-               <!-- ACCOUNT -->
-               <div class="col-md-3 clearfix">
-                   <div class="header-ctn">
-                       <!-- Wishlist -->
-                       <div>
-                           <a href="#">
-                               <i class="fa fa-heart-o"></i>
-                               <span>Your Wishlist</span>
-                               <div class="qty" id="wishlist-count">{{ $wishlistCount }}</div><!-- Динамическое количество -->
-                           </a>
-                       </div>
-                       <!-- /Wishlist -->
+           <!-- ACCOUNT -->
+           <div class="col-md-3 clearfix">
+               <div class="header-ctn">
+                   <!-- Wishlist -->
+                   <div>
+                       <a href="#">
+                           <i class="fa fa-heart-o"></i>
+                           <span>Your Wishlist</span>
+                           <div class="qty" id="wishlist-count">{{ $wishlistCount }}</div><!-- Динамическое количество -->
+                       </a>
+                   </div>
+                   <!-- /Wishlist -->
 
-                       <!-- Cart -->
-                       <div class="dropdown">
-                           <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                               <i class="fa fa-shopping-cart"></i>
-                               <span>Your Cart</span>
-                               {{-- <div class="qty">3 </div> --}}
-                               <div class="qty">{{ $cartItems->count() ?? 0 }}</div>
-                           </a>
-                           <div class="cart-dropdown">
-                               <div class="cart-list">
-                                   @if (!empty($cartItems))
-                                   @foreach ($cartItems as $item)
-                                   <div class="product-widget" data-product-id="{{ $item->product_id }}">
-                                       <div class="product-img">
-                                           <img src="{{ $item->image ? '/storage/img/' . $item->image : '/path/to/default/image.jpg' }}" alt="">
-                                       </div>
-                                       <div class="product-body">
-                                           <h3 class="product-name"><a href="#">{{ $item->product->name }}</a></h3>
-                                           <h4 class="product-price"><span class="qty">{{ $item->quantity }}x</span>${{ $item->product->price }}</h4>
-                                       </div>
-                                       {{-- <button class="delete"><i class="fa fa-close"></i></button> --}}
-                                       <button class="delete" onclick="removeFromCart({{ $item->product_id }})"><i class="fa fa-close"></i></button>
+                   <!-- Cart -->
+                   <div class="dropdown">
+                       <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                           <i class="fa fa-shopping-cart"></i>
+                           <span>Your Cart</span>
+                           {{-- <div class="qty">3 </div> --}}
+                           <div class="qty">{{ $cartItems->count() ?? 0 }}</div>
+                       </a>
+                       <div class="cart-dropdown">
+                           <div class="cart-list">
+                               @if (!empty($cartItems))
+                               @foreach ($cartItems as $item)
+                               <div class="product-widget" data-product-id="{{ $item->product_id }}">
+                                   <div class="product-img">
+                                       <img src="{{ $item->image ? '/storage/img/' . $item->image : '/path/to/default/image.jpg' }}" alt="">
                                    </div>
-                                   @endforeach
-                                   @else
-                                   <p>Ваша корзина пуста</p>
-                                   @endif
+                                   <div class="product-body">
+                                       <h3 class="product-name"><a href="#">{{ $item->product->name }}</a></h3>
+                                       <h4 class="product-price"><span class="qty">{{ $item->quantity }}x</span>${{ $item->product->price }}</h4>
+                                   </div>
+                                   {{-- <button class="delete"><i class="fa fa-close"></i></button> --}}
+                                   <button class="delete" onclick="removeFromCart({{ $item->product_id }})"><i class="fa fa-close"></i></button>
                                </div>
-                               <div class="cart-summary">
-                                   <small>{{ $cartItems->count() ?? 0 }} Item(s) selected</small>
-                                   <h5>SUBTOTAL: ${{ $cartItems->sum('price_x_quantity') ?? 0 }}</h5>
-                               </div>
-                               <div class="cart-btns">
-                                   <a href="{{ route('user.cart.index') }}">View Cart</a>
-                                   <a href="{{ route('checkout.index') }}">Checkout <i class="fa fa-arrow-circle-right"></i></a>
-                               </div>
+                               @endforeach
+                               @else
+                               <p>Ваша корзина пуста</p>
+                               @endif
+                           </div>
+                           <div class="cart-summary">
+                               <small>{{ $cartItems->count() ?? 0 }} Item(s) selected</small>
+                               <h5>SUBTOTAL: ${{ $cartItems->sum('price_x_quantity') ?? 0 }}</h5>
+                           </div>
+                           <div class="cart-btns">
+                               <a href="{{ route('user.cart.index') }}">View Cart</a>
+                               <a href="{{ route('checkout.index') }}">Checkout <i class="fa fa-arrow-circle-right"></i></a>
                            </div>
                        </div>
-                       <!-- /Cart -->
-
-                       <!-- Menu Toogle -->
-                       <div class="menu-toggle">
-                           <a href="#">
-                               <i class="fa fa-bars"></i>
-                               <span>Menu</span>
-                           </a>
-                       </div>
-                       <!-- /Menu Toogle -->
                    </div>
+                   <!-- /Cart -->
+
+                   <!-- Menu Toogle -->
+                   <div class="menu-toggle">
+                       <a href="#">
+                           <i class="fa fa-bars"></i>
+                           <span>Menu</span>
+                       </a>
+                   </div>
+                   <!-- /Menu Toogle -->
                </div>
-               <!-- /ACCOUNT -->
            </div>
-           <!-- row -->
+           <!-- /ACCOUNT -->
        </div>
-       <!-- container -->
+       <!-- row -->
+   </div>
+   <!-- container -->
    </div>
    <!-- /MAIN HEADER -->
 

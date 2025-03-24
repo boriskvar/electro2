@@ -6,6 +6,12 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\User\UserCartController;
 use App\Http\Controllers\CheckoutController;
 
+use App\Http\Controllers\User\MyAccountController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/my-account', [MyAccountController::class, 'index'])->name('my-account');
+    Route::get('/my-account/{page}', [MyAccountController::class, 'show'])->name('my-account.page');
+});
 // Главная страница
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 

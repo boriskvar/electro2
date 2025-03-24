@@ -14,9 +14,11 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\User\UserWishlistController;
+use App\Http\Controllers\User\UserOrderController;
+use App\Http\Controllers\User\MyAccountController;
+
+use Illuminate\Support\Facades\Route;
 
 // Публичные маршруты магазина
 Route::group([], function () {
@@ -59,6 +61,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// "My Account" - личный кабинет пользователя
+Route::middleware('auth')->prefix('my-account')->group(function () {
+    Route::get('/', [MyAccountController::class, 'index'])->name('my-account');
+    Route::get('/wishlist', [UserWishlistController::class, 'index'])->name('wishlist.index');
+    Route::get('/orders', [UserOrderController::class, 'index'])->name('orders.index');
 });
 
 // Подключение маршрутов аутентификации Breeze
