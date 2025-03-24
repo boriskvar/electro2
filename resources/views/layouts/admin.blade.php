@@ -143,17 +143,20 @@
                 <li class="{{ request()->is('admin/wishlists*') ? 'active' : '' }}">
                     <a href="{{ route('admin.wishlists.index') }}">wishlists</a>
                 </li>
+                <li class="{{ request()->is('admin/brands*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.brands.index') }}">Бренды</a>
+                </li>
                 <li class="{{ request()->is('admin/categories*') ? 'active' : '' }}">
                     <a href="{{ route('admin.categories.index') }}">Категории</a>
                 </li>
-                <li class="{{ request()->is('admin/products*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.products.index') }}">Товары</a>
+                <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.pages.index') }}">Страницы</a>
                 </li>
                 <li class="{{ request()->is('admin/menus*') ? 'active' : '' }}">
                     <a href="{{ route('admin.menus.index') }}">Меню</a>
                 </li>
-                <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.pages.index') }}">Страницы</a>
+                <li class="{{ request()->is('admin/products*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.products.index') }}">Товары</a>
                 </li>
                 <li class="{{ request()->is('admin/cart*') ? 'active' : '' }}">
                     <a href="{{ route('admin.cart.index') }}">Корзина</a>
@@ -161,7 +164,6 @@
                 <li class="{{ request()->is('admin/orders*') ? 'active' : '' }}">
                     <a href="{{ route('admin.orders.index') }}">Заказы</a>
                 </li>
-
                 <li class="{{ request()->is('admin/order-items*') ? 'active' : '' }}">
                     <a href="{{ route('admin.order-items.redirect') }}">Элемент Заказа</a>
                 </li>
@@ -174,9 +176,7 @@
                 {{-- <li class="{{ request()->is('admin/payments*') ? 'active' : '' }}">
                 <a href="{{ route('admin.payments.index') }}">Оплата</a>
                 </li> --}}
-                <li class="{{ request()->is('admin/brands*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.brands.index') }}">Бренды</a>
-                </li>
+
                 <li class="{{ request()->is('admin/contacts*') ? 'active' : '' }}">
                     <a href="{{ route('admin.contacts.index') }}">Контакты</a>
                 </li>

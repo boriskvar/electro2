@@ -43,19 +43,6 @@
             </select>
         </div>
 
-        <!-- Поле Меню -->
-        <div class="form-group">
-            <label for="menu_id">Меню:</label>
-            <select class="form-control" id="menu_id" name="menu_id">
-                <option value="">Выберите меню</option>
-                @foreach ($menus as $menu)
-                <option value="{{ $menu->id }}" {{ old('menu_id') == $menu->id ? 'selected' : '' }}>
-                    {{ $menu->name }}
-                </option>
-                @endforeach
-            </select>
-        </div>
-
         <!-- Поле Slug -->
         <div class="form-group">
             <label for="slug">Slug (уникальный идентификатор для SEO):</label>
@@ -147,6 +134,19 @@
             @error('stock_quantity')
             <div class="invalid-feedback text-danger">{{ $message }}</div>
             @enderror
+        </div>
+
+        <!-- Поле Меню -->
+        <div class="form-group">
+            <label for="menu_id">Меню(необязательно):</label>
+            <select class="form-control" id="menu_id" name="menu_id">
+                <option value="">Выберите меню</option>
+                @foreach ($menus as $menu)
+                <option value="{{ $menu->id }}" {{ old('menu_id') == $menu->id ? 'selected' : '' }}>
+                    {{ $menu->name }}
+                </option>
+                @endforeach
+            </select>
         </div>
 
         <!-- Поле Бренд -->
