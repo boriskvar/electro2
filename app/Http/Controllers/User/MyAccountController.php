@@ -3,23 +3,48 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class MyAccountController extends Controller
 {
+    // Главная страница (по умолчанию "dashboard")
     public function index()
     {
         return view('user.my-account', ['activePage' => 'dashboard']);
     }
 
-    public function show($page)
+    // Страница "Wishlist"
+    public function wishlist()
     {
-        $validPages = ['dashboard', 'wishlist', 'orders'];
+        return view('user.my-account', ['activePage' => 'wishlist']);
+    }
 
-        if (!in_array($page, $validPages)) {
-            abort(404);
-        }
+    // Страница "Orders"
+    public function orders()
+    {
+        return view('user.my-account', ['activePage' => 'orders']);
+    }
 
-        return view('user.my-account', ['activePage' => $page]);
+    // Страница "Cart"
+    public function cart()
+    {
+        return view('user.my-account', ['activePage' => 'cart']);
+    }
+
+    // Страница "Compare"
+    public function compare()
+    {
+        return view('user.my-account', ['activePage' => 'compare']);
+    }
+
+    // Страница "Viewed Products"
+    public function products()
+    {
+        return view('user.my-account', ['activePage' => 'products']);
+    }
+
+    // Страница "Reviews"
+    public function reviews()
+    {
+        return view('user.my-account', ['activePage' => 'reviews']);
     }
 }

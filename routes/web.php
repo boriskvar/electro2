@@ -64,11 +64,16 @@ Route::middleware('auth')->group(function () {
 });
 
 // "My Account" - личный кабинет пользователя
-Route::middleware('auth')->prefix('my-account')->group(function () {
-    Route::get('/', [MyAccountController::class, 'index'])->name('my-account');
-    Route::get('/wishlist', [UserWishlistController::class, 'index'])->name('wishlist.index');
-    Route::get('/orders', [UserOrderController::class, 'index'])->name('orders.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/my-account', [MyAccountController::class, 'index'])->name('my-account');
+    Route::get('/my-account/wishlist', [MyAccountController::class, 'wishlist'])->name('wishlist.index');
+    Route::get('/my-account/orders', [MyAccountController::class, 'orders'])->name('orders.index');
+    Route::get('/my-account/cart', [MyAccountController::class, 'cart'])->name('cart.index');
+    Route::get('/my-account/compare', [MyAccountController::class, 'compare'])->name('compare.index');
+    Route::get('/my-account/products', [MyAccountController::class, 'products'])->name('products.index');
+    Route::get('/my-account/reviews', [MyAccountController::class, 'reviews'])->name('reviews.index');
 });
+
 
 // Подключение маршрутов аутентификации Breeze
 require __DIR__ . '/auth.php';

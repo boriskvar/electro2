@@ -15,7 +15,7 @@ class UserWishlistController extends Controller
         $this->middleware('auth'); // Доступ только для авторизованных пользователей
     } */
 
-    public function index()
+    /*  public function index()
     {
         // $userId = Auth::id(); // Получаем ID авторизованного пользователя
         // $products = Wishlist::where('user_id', $userId)
@@ -26,17 +26,32 @@ class UserWishlistController extends Controller
         // return view('user.wishlist.index', compact('products'));
         $userId = Auth::id(); // Получаем ID авторизованного пользователя
         $wishlists = Wishlist::where('user_id', $userId)->with('product')->get();
+        dd($wishlists);
 
         // if ($wishlists->isEmpty()) {
         //     return response()->json(['message' => 'Нет товаров в списке желаемого'], 404);  // Возвращаем JSON-ответ, если нет товаров
         // }
         // Получаем количество товаров в списке желаемого (wishlist)
         $wishlistCount = Auth::check() ? Auth::user()->wishlist()->count() : 0;
-        // dd($wishlistCount);
+        dd($wishlistCount);
 
         // return response()->json(['data' => $wishlists], 200);  // Возвращаем список желаемых товаров в JSON формате
         return view('user.wishlist.index', compact('wishlists', 'wishlistCount'));
+    } */
+
+    public function index()
+    {
+        dd('Метод index() выполняется');
+        $userId = Auth::id();
+        $wishlists = Wishlist::where('user_id', $userId)->with('product')->get();
+        $wishlistCount = Auth::user()->wishlist()->count();
+        // Выведем сразу все данные
+        dd(compact('userId', 'wishlists', 'wishlistCount'));
+
+        return view('user.wishlist.index', compact('wishlists', 'wishlistCount'))
+            ->with('activePage', 'wishlist'); // Добавляем activePage
     }
+
 
     public function store(Request $request)
     {

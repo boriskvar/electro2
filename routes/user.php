@@ -8,10 +8,10 @@ use App\Http\Controllers\CheckoutController;
 
 use App\Http\Controllers\User\MyAccountController;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/my-account', [MyAccountController::class, 'index'])->name('my-account');
-    Route::get('/my-account/{page}', [MyAccountController::class, 'show'])->name('my-account.page');
-});
+/* Route::middleware('auth')->group(function () {
+    // Route::get('/my-account', [MyAccountController::class, 'index'])->name('my-account');
+
+}); */
 // Главная страница
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 
