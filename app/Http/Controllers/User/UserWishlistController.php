@@ -10,12 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserWishlistController extends Controller
 {
-    /* public function __construct()
-    {
-        $this->middleware('auth'); // Доступ только для авторизованных пользователей
-    } */
-
-    /*  public function index()
+    public function index()
     {
         // $userId = Auth::id(); // Получаем ID авторизованного пользователя
         // $products = Wishlist::where('user_id', $userId)
@@ -37,9 +32,9 @@ class UserWishlistController extends Controller
 
         // return response()->json(['data' => $wishlists], 200);  // Возвращаем список желаемых товаров в JSON формате
         return view('user.wishlist.index', compact('wishlists', 'wishlistCount'));
-    } */
+    }
 
-    public function index()
+    /*  public function index()
     {
         dd('Метод index() выполняется');
         $userId = Auth::id();
@@ -50,7 +45,7 @@ class UserWishlistController extends Controller
 
         return view('user.wishlist.index', compact('wishlists', 'wishlistCount'))
             ->with('activePage', 'wishlist'); // Добавляем activePage
-    }
+    } */
 
 
     public function store(Request $request)

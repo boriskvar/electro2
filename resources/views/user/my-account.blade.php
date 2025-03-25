@@ -6,28 +6,16 @@
     <div class="row">
         <!-- Сайдбар -->
         <div class="col-md-3">
-            <div class="sidebar" style="width: 150px;">
-                <a href="{{ route('my-account') }}" class="my-sidebar-item {{ $activePage === 'dashboard' ? 'active' : '' }}">
-                    Dashboard
-                </a>
-                <a href="{{ route('wishlist.index') }}" class="my-sidebar-item {{ $activePage === 'wishlist' ? 'active' : '' }}">
-                    My Wishlist
-                </a>
-                <a href="{{ route('orders.index') }}" class="my-sidebar-item {{ $activePage === 'orders' ? 'active' : '' }}">
-                    My Orders
-                </a>
-                <a href="{{ route('cart.index') }}" class="my-sidebar-item {{ $activePage === 'cart' ? 'active' : '' }}">
-                    My Cart
-                </a>
-                <a href="{{ route('compare.index') }}" class="my-sidebar-item {{ $activePage === 'compare' ? 'active' : '' }}">
-                    Compare list
-                </a>
-                <a href="{{ route('products.index') }}" class="my-sidebar-item {{ $activePage === 'products' ? 'active' : '' }}">
-                    Viewed products
-                </a>
-                <a href="{{ route('reviews.index') }}" class="my-sidebar-item {{ $activePage === 'reviews' ? 'active' : '' }}">
-                    My Reviews
-                </a>
+            <div class="sidebar" {{-- style="width: 150px;" --}}>
+
+                <a href="{{ route('my-account') }}" class="my-sidebar-item {{ $activePage === 'dashboard' ? 'active' : '' }}">Dashboard</a>
+                <a href="{{ route('wishlist.index') }}" class="my-sidebar-item {{ $activePage === 'wishlist' ? 'active' : '' }}">My Wishlist</a>
+                <a href="{{ route('cart.index') }}" class="my-sidebar-item {{ $activePage === 'cart' ? 'active' : '' }}">My Cart</a>
+                <a href="{{ route('orders.index') }}" class="my-sidebar-item {{ $activePage === 'orders' ? 'active' : '' }}"> My Orders</a>
+                <a href="{{ route('compare.index') }}" class="my-sidebar-item {{ $activePage === 'compare' ? 'active' : '' }}">Compare list</a>
+                <a href="{{ route('products.index') }}" class="my-sidebar-item {{ $activePage === 'products' ? 'active' : '' }}">Viewed products</a>
+                <a href="{{ route('reviews.index') }}" class="my-sidebar-item {{ $activePage === 'reviews' ? 'active' : '' }}">My Reviews</a>
+
             </div>
         </div>
 
@@ -37,15 +25,27 @@
                 <div class="card-body">
                     @if ($activePage === 'dashboard')
                     @include('dashboard') {{-- Включаем Breeze dashboard.blade.php --}}
+
                     @elseif ($activePage === 'wishlist')
                     <h3>My Wishlist</h3>
                     <p>Список товаров, добавленных в список желаний.</p>
-                    @elseif ($activePage === 'orders')
-                    <h3>My Orders</h3>
-                    <p>История заказов.</p>
+
+                    <div id="wishlist-products" data-products="{{ json_encode($products) }}">
+                        <product :products="products" view-type="grid"></product>
+                    </div>
+
                     @elseif ($activePage === 'cart')
                     <h3>My Cart</h3>
                     <p>Список товаров, добавленных в корзину.</p>
+
+                    <div id="cart-products" data-products="{{ json_encode($products) }}">
+                        <product :products="products" view-type="grid"></product>
+                    </div>
+
+                    @elseif ($activePage === 'orders')
+                    <h3>My Orders</h3>
+                    <p>История заказов.</p>
+
                     @elseif ($activePage === 'compare')
                     <h3>Compare list</h3>
                     <p>Товары добавленные в список сравнения.</p>
