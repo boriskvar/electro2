@@ -6,7 +6,7 @@
     <div class="row">
         <!-- Сайдбар -->
         <div class="col-md-3">
-            <div class="sidebar">
+            <div class="sidebar" style="width: 150px;">
                 <a href="{{ route('my-account') }}" class="my-sidebar-item {{ $activePage === 'dashboard' ? 'active' : '' }}">
                     Dashboard
                 </a>
@@ -63,11 +63,20 @@
 </div>
 
 <style>
+    /* Устанавливаем ширину сайдбара */
+    .sidebar {
+        width: 150px;
+        /* Установите нужную ширину */
+        background-color: #f8f9fa;
+        /* Цвет фона */
+        padding: 15px;
+        /* Отступы внутри сайдбара */
+    }
+
     /* Стили для элементов в сайдбаре */
     .my-sidebar-item {
         display: block;
         /* Каждая ссылка будет на новой строке */
-
         padding: 10px 15px;
         /* Отступы для ссылок */
         text-decoration: none;
