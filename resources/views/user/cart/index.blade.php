@@ -10,7 +10,7 @@
                 <div class="custom-header">
                     <h2 class="h2">Корзина</h2>
                     <modal-close-btn class="close-modal">
-                        <button class="close-button">
+                        <button class="close-button" (click)="closeModal()">
                             <span class="close-icon">&times;</span>
                         </button>
                     </modal-close-btn>
@@ -2054,6 +2054,30 @@
         const deleteSelectedBtn = document.querySelector('.cart-header__cart'); // Кнопка удаления выбранных товаров
         const menuToggleBtns = document.querySelectorAll('.menu-toggle-btn');
 
+        // Ищем кастомный элемент modal-close-btn
+        const closeButtonElement = document.querySelector('modal-close-btn');
+
+        if (closeButtonElement) {
+            // Проверяем, есть ли у него Shadow DOM
+            const shadowRoot = closeButtonElement.shadowRoot;
+            const closeButton = shadowRoot ? shadowRoot.querySelector('.close-button') : closeButtonElement.querySelector('.close-button');
+
+            if (closeButton) {
+                closeButton.addEventListener('click', function() {
+                    const modal = document.querySelector('modal');
+                    if (modal) {
+                        modal.style.display = 'none'; // Закрываем модалку
+                    }
+
+                    // Возвращаемся на предыдущую страницу
+                    history.back();
+                });
+            } else {
+                console.warn('Кнопка закрытия не найдена внутри modal-close-btn');
+            }
+        } else {
+            console.warn('Элемент modal-close-btn не найден');
+        }
 
         // Проверка на наличие элементов
         if (!selectAllCheckbox || !checkboxes.length || !selectAllText || !wishlistButton || !cartReceipt || !deleteSelectedBtn) {
