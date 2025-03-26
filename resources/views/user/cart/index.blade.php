@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.main')
 @section('content')
 
 <body>
@@ -108,10 +108,10 @@
                                                         </button>
 
                                                         <!-- Блок с иконкой корзины и текстом "Удалить" -->
-                                                        {{-- <div class="delete-option hidden">
-                                                                        <i class="fa fa-trash"></i>
-                                                                        <span class="delete-text">Удалить</span>
-                                                                    </div> --}}
+                                                        <div class="delete-option hidden">
+                                                            <i class="fa fa-trash"></i>
+                                                            <span class="delete-text">Удалить</span>
+                                                        </div>
 
                                                         <!-- Вставка компонента -->
                                                         <!-- Блок с иконкой корзины и текстом "Удалить"  -->
