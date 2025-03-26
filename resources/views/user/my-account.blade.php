@@ -39,7 +39,7 @@
                     <p>Список товаров, добавленных в корзину.</p>
 
                     <div id="cart-products" data-products="{{ json_encode($products) }}">
-                        <product :products="products" view-type="grid"></product>
+                        <cart :cart-items="products"></cart>
                     </div>
 
                     @elseif ($activePage === 'orders')

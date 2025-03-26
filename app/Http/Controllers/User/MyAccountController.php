@@ -40,18 +40,14 @@ class MyAccountController extends Controller
     // Страница "Cart"
     public function cart()
     {
-        $userId = Auth::id();
-        // dd($userId); //3
-        // Получаем все записи корзины пользователя с товарами
-        $cartItems = Cart::where('user_id', $userId)->with('product')->get();
-        // dd($cartItems);
-        // Преобразуем коллекцию Cart в массив товаров
-        $products = $cartItems->map(function ($cartItem) {
-            return $cartItem->product;
-        });
+        // Получаем товары, добавленные в корзину текущего пользователя
+        $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
 
-        return view('user.my-account', compact('products'))
-            ->with('activePage', 'cart'); // Добавляем activePage
+        // Передаем в представление
+        return view('user.cart.index', [
+            'activePage' => 'cart',
+            'cartItems' => $cartItems,
+        ]);
     }
 
 

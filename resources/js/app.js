@@ -8,6 +8,7 @@ Alpine.start();
 // === Vue.js ===
 import { createApp } from 'vue';
 import Product from './components/Product.vue';
+import Cart from './components/Cart.vue';
 
 // 📌 Магазин (Vue монтируется на #app и загружает товары через API)
 if (document.getElementById('app')) {
@@ -54,3 +55,23 @@ if (document.getElementById('wishlist-products')) {
 
     wishlistApp.mount('#wishlist-products');
 }
+
+// 📌 Cart (Vue монтируется на #cart-products и получает данные от Laravel)
+if (document.getElementById('cart-products')) {
+    const cartApp = createApp({
+        components: { Cart },
+        data() {
+            return {
+                cartItems: []
+            };
+        },
+        mounted() {
+            // Получаем данные из Laravel
+            const element = document.getElementById('cart-products');
+            this.cartItems = JSON.parse(element.dataset.products);
+        }
+    });
+
+    cartApp.mount('#cart-products');
+}
+
