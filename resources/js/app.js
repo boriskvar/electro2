@@ -16,23 +16,26 @@ if (document.getElementById('app')) {
         components: { Product },
         data() {
             return {
-                products: []
+                products: [] // Инициализируем пустым массивом
             };
         },
         mounted() {
-            this.loadProducts();
+            this.loadProducts(); // Загружаем данные при монтировании
         },
         methods: {
             loadProducts() {
                 fetch('/api/products')
                     .then(response => response.json())
                     .then(data => {
-                        this.products = data.data;
+                        this.products = data.data; // Записываем полученные продукты
                     })
                     .catch(error => console.error('Ошибка загрузки продуктов:', error));
             }
         }
     });
+
+    // 📌 Глобальная регистрация компонента
+    app.component('products', Product);
 
     app.mount('#app');
 }

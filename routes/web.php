@@ -19,6 +19,7 @@ use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\MyAccountController;
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // Публичные маршруты магазина
 Route::group([], function () {

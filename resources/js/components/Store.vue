@@ -9,32 +9,29 @@
             <!-- Список продуктов -->
             <div v-else class="row">
                 <product
-                    v-for="product in products"
-                    :key="product.id"
-                    :product="product"
-                    @add-to-cart="handleAddToCart"
-                    class="col-3 col-sm-3 col-md-3 col-lg-4 col-xl-4"
-                >
+                         v-for="product in products"
+                         :key="product.id"
+                         :product="product"
+                         @add-to-cart="handleAddToCart"
+                         class="col-3 col-sm-3 col-md-3 col-lg-4 col-xl-4">
                     <img
-                        :src="`/storage/img/${product.image}`"
-                        alt="Product Image"
-                    />
+                         :src="`/storage/img/${product.image}`"
+                         alt="Product Image" />
                 </product>
             </div>
         </div>
 
         <!-- Фильтры -->
         <product-filters
-            :sort="filters.sortBy"
-            :show="Number(filters.perPage)"
-            :current-page="currentPage"
-            :total="total"
-            :view="viewMode"
-            @update:sort="updateSort"
-            @update:show="updateShow"
-            @update:page="updatePage"
-            @update:view="updateView"
-        />
+                         :sort="filters.sortBy"
+                         :show="Number(filters.perPage)"
+                         :current-page="currentPage"
+                         :total="total"
+                         :view="viewMode"
+                         @update:sort="updateSort"
+                         @update:show="updateShow"
+                         @update:page="updatePage"
+                         @update:view="updateView" />
     </div>
 </template>
 
@@ -47,6 +44,11 @@ export default {
         ProductFilters,
         Product,
     },
+    props: {
+        products: Array,    // Продукты из Laravel
+        categories: Array,  // Категории
+        viewType: String    // Вид (grid/list)
+    },
     data() {
         return {
             products: [],
@@ -56,7 +58,7 @@ export default {
             },
             currentPage: 1, // Текущая страница
             total: 0, // Общее количество продуктов
-            viewMode: "grid", // Вид (grid или list)
+            viewMode: this.viewType || "grid", // Берем из пропсов или ставим "grid"
         };
     },
     methods: {
@@ -93,7 +95,14 @@ export default {
         },
     },
     mounted() {
-        this.loadProducts(); // Загрузка продуктов при монтировании компонента
+        console.log("Продукты из Laravel:", this.products);
+        console.log("Категории из Laravel:", this.categories);
+        console.log("Тип отображения:", this.viewType);
+
+        if (!this.products || this.products.length === 0) {
+            console.warn("Продукты не загружены или массив пуст");
+        }
     },
+
 };
 </script>

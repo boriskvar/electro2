@@ -82,7 +82,7 @@ class MenuController extends Controller
         $categories = Category::all();
         $brands = Brand::withCount('products')->whereHas('products')->get();
         // dd($brands->toArray());
-
+        // dd($categories);
         // Получаем топ-3 самых популярных товара
         $topSellingProducts = Product::where('is_top_selling', true)
             ->orderBy('position', 'asc')
@@ -130,6 +130,7 @@ class MenuController extends Controller
         // Получаем товары с пагинацией
         // $products = $productsQuery->paginate($perPage);
         $products = $productsQuery->paginate($perPage)->withQueryString(); // withQueryString() сохраняет параметры фильтрации в пагинации
+        // dd($products);
 
         // Получаем количество товаров в списке желаемого (wishlist)
         $wishlistCount = Auth::check() ? Auth::user()->wishlist()->count() : 0;
