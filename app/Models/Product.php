@@ -86,4 +86,9 @@ class Product extends Model
     {
         return $this->belongsTo(Menu::class); // Продукт принадлежит одному меню
     }
+
+    public function attributes()
+    {
+        return $this->hasMany(ProductAttribute::class);
+    }
 }
