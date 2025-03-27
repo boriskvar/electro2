@@ -10,7 +10,7 @@ class Category extends Model
     use HasFactory;
 
     // Разрешаем массовое заполнение этих полей
-    protected $fillable = ['name', 'slug', 'description',  'parent_id', 'image', 'active', 'display_order', 'is_sale' ];
+    protected $fillable = ['name', 'slug', 'description',  'parent_id', 'image', 'active', 'display_order', 'is_sale'];
 
     // Связь с продуктами
     public function products()
@@ -35,9 +35,14 @@ class Category extends Model
     {
         return $this->hasMany(Page::class, 'category_id');
     }
-    
+
     public function menus()
-{
-    return $this->hasMany(Menu::class);
-}
+    {
+        return $this->hasMany(Menu::class);
+    }
+
+    public function attributes()
+    {
+        return $this->hasMany(CategoryAttribute::class);
+    }
 }

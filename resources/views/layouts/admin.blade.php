@@ -149,6 +149,9 @@
                 <li class="{{ request()->is('admin/categories*') ? 'active' : '' }}">
                     <a href="{{ route('admin.categories.index') }}">Категории</a>
                 </li>
+                <li class="{{ request()->is('admin/category-attributes*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.category-attributes.index') }}">Характеристики</a>
+                </li>
                 <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}">
                     <a href="{{ route('admin.pages.index') }}">Страницы</a>
                 </li>
@@ -158,6 +161,7 @@
                 <li class="{{ request()->is('admin/products*') ? 'active' : '' }}">
                     <a href="{{ route('admin.products.index') }}">Товары</a>
                 </li>
+
                 <li class="{{ request()->is('admin/cart*') ? 'active' : '' }}">
                     <a href="{{ route('admin.cart.index') }}">Корзина</a>
                 </li>

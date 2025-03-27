@@ -89,6 +89,7 @@ class Product extends Model
 
     public function attributes()
     {
-        return $this->hasMany(ProductAttribute::class);
+        // Получаем все характеристики, связанные с категорией товара
+        return $this->category->attributes();
     }
 }

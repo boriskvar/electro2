@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\AdminWishlistController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminOrderItemController;
 use App\Http\Controllers\Admin\SearchAnalyticsController;
+use App\Http\Controllers\Admin\AdminProductAttributeController;
+use App\Http\Controllers\Admin\AdminCategoryAttributeController;
 
 
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -59,6 +61,34 @@ Route::prefix('admin')->group(function () {
         Route::put('/{product}', [AdminProductController::class, 'update'])->name('admin.products.update'); // Обрабатывает запрос на обновление продукта (UPDATE)
         Route::delete('/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy'); // Удаляет продукт (DELETE)
     });
+
+    Route::prefix('/category-attributes')->group(function () {
+
+        // Отображение всех атрибутов
+        Route::get('/', [AdminCategoryAttributeController::class, 'index'])->name('admin.category-attributes.index');
+
+        // Форма для добавления нового атрибута
+        Route::get('/create', [AdminCategoryAttributeController::class, 'create'])->name('admin.category-attributes.create');
+
+        // Обработка запроса на создание атрибута
+        Route::post('/', [AdminCategoryAttributeController::class, 'store'])->name('admin.category-attributes.store');
+
+        // Отображение атрибута (например, просмотр атрибута в контексте категории)
+        Route::get('/{categoryAttribute}', [AdminCategoryAttributeController::class, 'show'])->name('admin.category-attributes.show');
+
+        // Форма для редактирования атрибута
+        Route::get('/{categoryAttribute}/edit', [AdminCategoryAttributeController::class, 'edit'])->name('admin.category-attributes.edit');
+
+        // Обработка запроса на обновление атрибута
+        Route::put('/{categoryAttribute}', [AdminCategoryAttributeController::class, 'update'])->name('admin.category-attributes.update');
+
+        // Удаление атрибута
+        Route::delete('/{categoryAttribute}', [AdminCategoryAttributeController::class, 'destroy'])->name('admin.category-attributes.destroy');
+
+        // Поиск атрибутов (если необходимо)
+        Route::get('/search', [AdminCategoryAttributeController::class, 'search'])->name('admin.category-attributes.search');
+    });
+
 
 
     // Маршруты для работы с меню (CRUD)
