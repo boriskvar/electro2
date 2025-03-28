@@ -51,14 +51,19 @@ class AdminCategoryAttributeController extends Controller
 
     public function show(Product $product)
     {
-        // Получаем категорию товара и её характеристики
-        $categoryAttributes = $product->category ? $product->category->attributes : collect();
+        // Получаем категорию товара
+        $category = $product->category;  // Связь товара с категорией
 
-        // Получаем количество товара в корзине (если используется сессия)
+        // Получаем характеристики товара, если они есть
+        $categoryAttributes = $category ? $category->attributes : collect();
+
+        // Получаем количество товара в корзине, если используется сессия
         $currentQuantity = session("cart.{$product->id}", 0);
 
-        return view('admin.products.show', compact('product', 'categoryAttributes', 'currentQuantity'));
+        // Передаем данные в представление
+        return view('admin.products.show', compact('product', 'categoryAttributes', 'category', 'currentQuantity'));
     }
+
 
 
     public function edit(CategoryAttribute $categoryAttribute)

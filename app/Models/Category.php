@@ -41,6 +41,7 @@ class Category extends Model
         return $this->hasMany(Menu::class);
     }
 
+    // Связь с характеристиками категории
     public function attributes()
     {
         return $this->hasMany(CategoryAttribute::class);

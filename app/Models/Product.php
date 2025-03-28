@@ -87,9 +87,15 @@ class Product extends Model
         return $this->belongsTo(Menu::class); // Продукт принадлежит одному меню
     }
 
-    public function attributes()
+    /* public function attributes()
     {
         // Получаем все характеристики, связанные с категорией товара
-        return $this->category->attributes();
+        return $this->hasMany(CategoryAttribute::class);
+    } */
+
+    // Связь с характеристиками через категорию
+    public function categoryAttributes()
+    {
+        return $this->belongsToMany(CategoryAttribute::class, 'product_category_attributes')->withPivot('value');
     }
 }
