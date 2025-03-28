@@ -49,20 +49,18 @@ class AdminCategoryAttributeController extends Controller
         return back()->with('error', 'Ошибка при добавлении характеристики категории!');
     }
 
-    public function show(Product $product)
+    public function show(CategoryAttribute $categoryAttribute)
     {
-        // Получаем категорию товара
-        $category = $product->category;  // Связь товара с категорией
+        // Получаем категорию атрибута
+        $category = $categoryAttribute->category;
 
-        // Получаем характеристики товара, если они есть
-        $categoryAttributes = $category ? $category->attributes : collect();
+        // Получаем товар, если есть
+        $product = $category ? $category->product : null;
 
-        // Получаем количество товара в корзине, если используется сессия
-        $currentQuantity = session("cart.{$product->id}", 0);
-
-        // Передаем данные в представление
-        return view('admin.products.show', compact('product', 'categoryAttributes', 'category', 'currentQuantity'));
+        // Передаем все данные в представление
+        return view('admin.category_attributes.show', compact('categoryAttribute', 'category', 'product'));
     }
+
 
 
 

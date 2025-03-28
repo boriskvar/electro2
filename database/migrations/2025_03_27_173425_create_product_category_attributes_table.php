@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('product_category_attributes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained(); // Связь с таблицей товаров
-            $table->foreignId('category_attribute_id')->constrained(); // Связь с таблицей характеристик
+            // Убедитесь, что ваши таблицы products и category_attributes существуют
+            $table->foreignId('product_id')->constrained('products'); // Связь с таблицей products
+            $table->foreignId('category_attribute_id')->constrained('category_attributes'); // Связь с таблицей category_attributes
             $table->string('value'); // Значение характеристики для товара
             $table->timestamps();
         });

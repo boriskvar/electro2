@@ -10,9 +10,9 @@ class Product extends Model
     use HasFactory;
 
     protected $casts = [
-        'sizes' => 'array', // преобразование JSON в массив
-        'colors' => 'array', // преобразование JSON в массив(чтоб обращаться к цвету напрямую, как к массиву: $image = $product->images[0];)
-        'images' => 'array', // преобразование JSON в массив (Теперь можете обращаться к изображениям напрямую, как к массиву: $image = $product->images[0];)
+        'sizes' => 'array', // Преобразование JSON в массив
+        'colors' => 'array', // Преобразование JSON в массив
+        'images' => 'array', // Преобразование JSON в массив
     ];
 
     // Разрешаем массовое заполнение этих полей
@@ -34,14 +34,13 @@ class Product extends Model
         'brand_id', // Внешний ключ для бренда (необязательно)
         'menu_id',
         'images', // Массив изображений
-        // Новые поля
         'is_top_selling',
         'discount_percentage',
         'is_new',
         'position',
     ];
 
-    public static function boot()
+    protected static function boot()
     {
         parent::boot();
 
@@ -62,7 +61,7 @@ class Product extends Model
     // Связь с категорией
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class);
     }
 
     // Связь с заказами (через таблицу order_items)
@@ -71,31 +70,28 @@ class Product extends Model
         return $this->belongsToMany(Order::class, 'order_items');
     }
 
+    // Связь с отзывами
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'product_id', 'id'); // product_id это внешний ключ в таблице reviews
+        return $this->hasMany(Review::class);
     }
 
-    // Связь с моделью Brand (обратная связь)
+    // Связь с брендом
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'brand_id'); // Каждый продукт принадлежит одному бренду
+        return $this->belongsTo(Brand::class);
     }
 
+    // Связь с меню
     public function menu()
     {
-        return $this->belongsTo(Menu::class); // Продукт принадлежит одному меню
+        return $this->belongsTo(Menu::class);
     }
 
-    /* public function attributes()
-    {
-        // Получаем все характеристики, связанные с категорией товара
-        return $this->hasMany(CategoryAttribute::class);
-    } */
-
-    // Связь с характеристиками через категорию
+    // Связь с характеристиками через промежуточную таблицу
     public function categoryAttributes()
     {
-        return $this->belongsToMany(CategoryAttribute::class, 'product_category_attributes')->withPivot('value');
+        return $this->belongsToMany(CategoryAttribute::class, 'product_category_attributes')
+            ->withPivot('value');
     }
 }

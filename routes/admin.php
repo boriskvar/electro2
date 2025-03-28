@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\AdminOrderItemController;
 use App\Http\Controllers\Admin\SearchAnalyticsController;
 use App\Http\Controllers\Admin\AdminProductAttributeController;
 use App\Http\Controllers\Admin\AdminCategoryAttributeController;
+use App\Http\Controllers\Admin\AdminProductAttributeValueController;
 
 
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -62,6 +63,33 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy'); // Удаляет продукт (DELETE)
     });
 
+    Route::prefix('/product-attributes')->group(function () {
+
+        // Отображение всех значений атрибутов для товаров
+        Route::get('/', [AdminProductAttributeValueController::class, 'index'])->name('admin.product-attributes.index');
+
+        // Форма для добавления нового значения атрибута
+        Route::get('/create', [AdminProductAttributeValueController::class, 'create'])->name('admin.product-attributes.create');
+
+        // Обработка запроса на создание значения атрибута
+        Route::post('/', [AdminProductAttributeValueController::class, 'store'])->name('admin.product-attributes.store');
+
+        // Отображение конкретного значения атрибута (например, для конкретного товара)
+        Route::get('/{productAttribute}', [AdminProductAttributeValueController::class, 'show'])->name('admin.product-attributes.show');
+
+        // Форма для редактирования значения атрибута
+        Route::get('/{productAttribute}/edit', [AdminProductAttributeValueController::class, 'edit'])->name('admin.product-attributes.edit');
+
+        // Обновление значения атрибута
+        Route::put('/{productAttribute}', [AdminProductAttributeValueController::class, 'update'])->name('admin.product-attributes.update');
+
+        // Удаление значения атрибута
+        Route::delete('/{productAttribute}', [AdminProductAttributeValueController::class, 'destroy'])->name('admin.product-attributes.destroy');
+
+        // Поиск значений атрибутов (если нужно)
+        Route::get('/search', [AdminProductAttributeValueController::class, 'search'])->name('admin.product-attributes.search');
+    });
+
     Route::prefix('/category-attributes')->group(function () {
 
         // Отображение всех атрибутов
@@ -88,6 +116,7 @@ Route::prefix('admin')->group(function () {
         // Поиск атрибутов (если необходимо)
         Route::get('/search', [AdminCategoryAttributeController::class, 'search'])->name('admin.category-attributes.search');
     });
+
 
 
 

@@ -161,6 +161,9 @@
                 <li class="{{ request()->is('admin/products*') ? 'active' : '' }}">
                     <a href="{{ route('admin.products.index') }}">Товары</a>
                 </li>
+                <li class="{{ request()->is('admin/product-attributes*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.product-attributes.index') }}">Характеристики Товара</a>
+                </li>
 
                 <li class="{{ request()->is('admin/cart*') ? 'active' : '' }}">
                     <a href="{{ route('admin.cart.index') }}">Корзина</a>
