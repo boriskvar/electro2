@@ -4,21 +4,22 @@ require base_path('routes/user.php');
 require base_path('routes/api.php');
 
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\NewsletterController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\UserWishlistController;
-use App\Http\Controllers\User\UserOrderController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ComparisonController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\User\MyAccountController;
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\UserOrderController;
+use App\Http\Controllers\User\UserWishlistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // Публичные маршруты магазина
@@ -70,7 +71,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-account/wishlist', [MyAccountController::class, 'wishlist'])->name('wishlist.index');
     Route::get('/my-account/cart', [MyAccountController::class, 'cart'])->name('cart.index');
     Route::get('/my-account/orders', [MyAccountController::class, 'orders'])->name('orders.index');
+
+    // Сравнение товаров (доступно только авторизованным)
     Route::get('/my-account/compare', [MyAccountController::class, 'compare'])->name('compare.index');
+    Route::post('/my-account/compare/add', [MyAccountController::class, 'addToCompare'])->name('compare.add');
+    Route::post('/my-account/compare/remove', [MyAccountController::class, 'removeFromCompare'])->name('compare.remove');
+    Route::delete('/my-account/compare/clear', [MyAccountController::class, 'clearCompare'])->name('compare.clear');
+
     Route::get('/my-account/products', [MyAccountController::class, 'products'])->name('products.index');
     Route::get('/my-account/reviews', [MyAccountController::class, 'reviews'])->name('reviews.index');
 });

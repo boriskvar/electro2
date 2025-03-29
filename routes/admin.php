@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AdminCheckoutController;
 use App\Http\Controllers\Admin\AdminWishlistController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminOrderItemController;
+use App\Http\Controllers\Admin\AdminComparisonController;
 use App\Http\Controllers\Admin\SearchAnalyticsController;
 use App\Http\Controllers\Admin\AdminProductAttributeController;
 use App\Http\Controllers\Admin\AdminCategoryAttributeController;
@@ -116,6 +117,7 @@ Route::prefix('admin')->group(function () {
         // Поиск атрибутов (если необходимо)
         Route::get('/search', [AdminCategoryAttributeController::class, 'search'])->name('admin.category-attributes.search');
     });
+
 
 
 

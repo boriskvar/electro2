@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Models\Cart;
 use App\Models\Wishlist;
+use App\Models\Comparison;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +29,7 @@ class MyAccountController extends Controller
         $products = $wishlists->map(function ($wishlist) {
             return $wishlist->product;
         });
+        dd($products);
 
         return view('user.my-account', [
             'activePage' => 'wishlist',
@@ -62,8 +65,58 @@ class MyAccountController extends Controller
     // Страница "Compare"
     public function compare()
     {
-        return view('user.my-account', ['activePage' => 'compare']);
+        $compare = Comparison::where('user_id', Auth::id())->with('products')->get();
+
+
+        return view('user.my-account', [
+            'activePage' => 'wishlist',
+            'compare' => $compare
+        ]);
     }
+
+    public function addToCompare(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        $comparison = Comparison::firstOrCreate([
+            // 'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
+        ]);
+
+        $comparison->products()->syncWithoutDetaching([$request->product_id]);
+
+        return redirect()->back()->with('success', 'Товар добавлен в сравнение.');
+    }
+
+    public function removeFromCompare(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        $comparison = Comparison::where('user_id', Auth::id())->first();
+
+        if ($comparison) {
+            $comparison->products()->detach($request->product_id);
+        }
+
+        return redirect()->back()->with('success', 'Товар удален из сравнения.');
+    }
+
+    public function clearCompare()
+    {
+        $comparison = Comparison::where('user_id', Auth::id())->first();
+
+        if ($comparison) {
+            $comparison->products()->detach();
+            $comparison->delete();
+        }
+
+        return redirect()->back()->with('success', 'Список сравнения очищен.');
+    }
+
 
     // Страница "Viewed Products"
     public function products()

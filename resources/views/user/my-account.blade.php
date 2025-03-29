@@ -30,7 +30,7 @@
                     <h3>My Wishlist</h3>
                     <p>Список товаров, добавленных в список желаний.</p>
 
-                    <div id="wishlist-products" data-products="{{ json_encode($products) }}">
+                    <div id="wishlist-products" {{-- data-products="{{ json_encode($products) }}" --}}>
                         <product :products="products" view-type="grid"></product>
                     </div>
 
@@ -49,12 +49,16 @@
                     @elseif ($activePage === 'compare')
                     <h3>Compare list</h3>
                     <p>Товары добавленные в список сравнения.</p>
+                    @include('user.comparison.index') {{-- Включаем страницу сравнения товаров --}}
+
                     @elseif ($activePage === 'products')
                     <h3>Viewed products</h3>
                     <p>Просмотренные товары.</p>
+
                     @elseif ($activePage === 'reviews')
                     <h3>My reviews</h3>
                     <p>Мои отзывы о товарах.</p>
+
                     @endif
                 </div>
             </div>

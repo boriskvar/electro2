@@ -165,6 +165,14 @@
                     <a href="{{ route('admin.product-attributes.index') }}">Характеристики Товара</a>
                 </li>
 
+                <li class="{{ request()->is('admin/comparison*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.comparison.index') }}">Лист сравнения</a>
+                </li>
+
+                <li class="{{ request()->is('admin/comparison*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.comparison.index') }}">Характеристики Товара</a>
+                </li>
+
                 <li class="{{ request()->is('admin/cart*') ? 'active' : '' }}">
                     <a href="{{ route('admin.cart.index') }}">Корзина</a>
                 </li>
