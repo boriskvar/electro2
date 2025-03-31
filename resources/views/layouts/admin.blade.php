@@ -150,7 +150,7 @@
                     <a href="{{ route('admin.categories.index') }}">Категории</a>
                 </li>
                 <li class="{{ request()->is('admin/category-attributes*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.category-attributes.index') }}">Характеристики</a>
+                    <a href="{{ route('admin.category-attributes.index') }}">хар-ки Категорий</a>
                 </li>
                 <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}">
                     <a href="{{ route('admin.pages.index') }}">Страницы</a>
@@ -162,16 +162,27 @@
                     <a href="{{ route('admin.products.index') }}">Товары</a>
                 </li>
                 <li class="{{ request()->is('admin/product-attributes*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.product-attributes.index') }}">Характеристики Товара</a>
+                    <a href="{{ route('admin.product-attributes.index') }}">хар-ки Товара</a>
                 </li>
 
-                <li class="{{ request()->is('admin/comparison*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.comparison.index') }}">Лист сравнения</a>
+                <li class="{{ request()->is('admin/comparisons*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.comparisons.index') }}">сomparisons_list</a>
                 </li>
 
-                <li class="{{ request()->is('admin/comparison*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.comparison.index') }}">Характеристики Товара</a>
+                @php
+                $comparison = $comparison ?? null; // Проверяем, есть ли переменная
+                @endphp
+
+                <li class="{{ request()->is('admin/comparisons/*/products*') ? 'active' : '' }}">
+                    @if($comparison)
+                    <a href="{{ route('admin.comparison_products.index', ['comparison' => $comparison->id]) }}">
+                        comparison_product
+                    </a>
+                    @else
+                    <span class="text-muted">comparison_product (выберите сравнение)</span>
+                    @endif
                 </li>
+
 
                 <li class="{{ request()->is('admin/cart*') ? 'active' : '' }}">
                     <a href="{{ route('admin.cart.index') }}">Корзина</a>

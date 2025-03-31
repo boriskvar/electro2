@@ -16,11 +16,12 @@ use App\Http\Controllers\Admin\AdminCheckoutController;
 use App\Http\Controllers\Admin\AdminWishlistController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminOrderItemController;
-use App\Http\Controllers\Admin\AdminComparisonController;
 use App\Http\Controllers\Admin\SearchAnalyticsController;
 use App\Http\Controllers\Admin\AdminProductAttributeController;
 use App\Http\Controllers\Admin\AdminCategoryAttributeController;
 use App\Http\Controllers\Admin\AdminProductAttributeValueController;
+use App\Http\Controllers\Admin\AdminComparisonController;
+use App\Http\Controllers\Admin\AdminComparisonProductController;
 
 
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -118,6 +119,34 @@ Route::prefix('admin')->group(function () {
         Route::get('/search', [AdminCategoryAttributeController::class, 'search'])->name('admin.category-attributes.search');
     });
 
+
+    Route::prefix('/comparisons')->group(function () {
+        // Отображение всех сравнений
+        Route::get('/', [AdminComparisonController::class, 'index'])->name('admin.comparisons.index');
+        // Создание нового сравнения (если необходимо)
+        Route::post('/', [AdminComparisonController::class, 'store'])->name('admin.comparisons.store');
+        // Просмотр одного сравнения
+        Route::get('/{comparison}', [AdminComparisonController::class, 'show'])->name('admin.comparisons.show');
+        // Полное удаление сравнения
+        Route::delete('/{comparison}', [AdminComparisonController::class, 'destroy'])->name('admin.comparisons.destroy');
+        // Очистка сравнения (удаление всех товаров)
+        Route::delete('/{comparison}/clear', [AdminComparisonController::class, 'clear'])->name('admin.comparisons.clear');
+
+        // Управление товарами в сравнении (работа с таблицей comparison_product)
+        Route::prefix('/{comparison}/products')->group(function () {
+            // Отобразить все товары в сравнении
+            Route::get('/', [AdminComparisonProductController::class, 'index'])->name('admin.comparison_products.index');
+            // Добавить товар в сравнение
+            Route::post('/', [AdminComparisonProductController::class, 'store'])->name('admin.comparison_products.store');
+            // Обновить информацию о товаре в сравнении (если есть доп. данные, например, комментарий)
+            Route::put('/{product}', [AdminComparisonProductController::class, 'update'])->name('admin.comparison_products.update');
+            // Удалить товар из сравнения
+            Route::delete('/{product}', [AdminComparisonProductController::class, 'destroy'])->name('admin.comparison_products.destroy');
+        });
+
+        // Новый маршрут для добавления товара в сравнение
+        Route::post('/{comparison}/add-product', [AdminComparisonController::class, 'addProduct'])->name('admin.comparisons.addProduct');
+    });
 
 
 

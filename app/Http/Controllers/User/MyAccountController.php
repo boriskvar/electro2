@@ -29,7 +29,7 @@ class MyAccountController extends Controller
         $products = $wishlists->map(function ($wishlist) {
             return $wishlist->product;
         });
-        dd($products);
+        // dd($products);
 
         return view('user.my-account', [
             'activePage' => 'wishlist',

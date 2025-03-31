@@ -69,13 +69,13 @@ class AdminProductController extends Controller
                 'colors' => explode(',', $request->input('colors')) // Преобразуем строку в массив
             ]);
         }
-    
+
         if ($request->has('sizes') && is_string($request->input('sizes'))) {
             $request->merge([
                 'sizes' => explode(',', $request->input('sizes')) // Преобразуем строку в массив
             ]);
         }
-    
+
         // Валидация данных
         $request->validate([
             'name' => 'required|string|max:255',
@@ -103,35 +103,35 @@ class AdminProductController extends Controller
             'is_new' => 'required|boolean',
             'position' => 'nullable|integer|min:0',
         ]);
-    // dd($request->toArray());
+        // dd($request->toArray());
         // Собираем данные
         $data = $request->all();
-    // dd($data);
+        // dd($data);
         // Рассчитываем discount_percentage
         $data['discount_percentage'] = isset($data['old_price']) && $data['old_price'] > 0
             ? round((($data['old_price'] - $data['price']) / $data['old_price']) * 100)
             : 0;
-    
+
         // Устанавливаем значения по умолчанию для reviews_count и views_count
         $data['reviews_count'] = $data['reviews_count'] ?? 0;
         $data['views_count'] = $data['views_count'] ?? 0;
-    
+
         // Обработка загрузки изображений
         if ($request->hasFile('images')) {
             $imagePaths = []; // Массив для хранения путей новых изображений
             foreach ($request->file('images') as $image) {
                 // Генерация уникального имени для каждого изображения
-                $filename = $image->getClientOriginalName();// или можно использовать `uniqid()` для уникальности
+                $filename = $image->getClientOriginalName(); // или можно использовать `uniqid()` для уникальности
                 $path = $image->storeAs('img', $filename, 'public'); // Сохраняем изображение в папку 'public/img'
                 $imagePaths[] = basename($path); // Сохраняем только имя файла (без пути)
             }
-             // Сохраняем массив изображений (Laravel автоматически конвертирует в JSON при сохранении в базе данных)
+            // Сохраняем массив изображений (Laravel автоматически конвертирует в JSON при сохранении в базе данных)
             $data['images'] = $imagePaths;
         } else {
             // Если изображения нет, сохраняем пустой массив
             $data['images'] = [];
         }
-    // dd($data);
+        // dd($data);
         // Создаем продукт
         Product::create($data);
 
@@ -151,15 +151,15 @@ class AdminProductController extends Controller
         $cartItem = Cart::where('user_id', $userId)->where('product_id', $product->id)->first();
         $currentQuantity = $cartItem ? $cartItem->stock_quantity : 0; // Если товар в корзине, получаем его количество, иначе 0
 
-            // Получаем все заказы пользователя или пустой набор
-    $orders = Order::where('user_id', $userId)->get();
-// dd($orders);
-    // Если заказов нет, можно вернуть пустое представление или сообщение
-    if ($orders->isEmpty()) {
-        // В случае, если заказов нет, можете отобразить сообщение или пустую страницу
-        return view('admin.products.show', compact('product', 'currentQuantity', 'orders'));
-    }
-//    dd($orders); 
+        // Получаем все заказы пользователя или пустой набор
+        $orders = Order::where('user_id', $userId)->get();
+        // dd($orders);
+        // Если заказов нет, можно вернуть пустое представление или сообщение
+        if ($orders->isEmpty()) {
+            // В случае, если заказов нет, можете отобразить сообщение или пустую страницу
+            return view('admin.products.show', compact('product', 'currentQuantity', 'orders'));
+        }
+        //    dd($orders); 
         // Передаем продукт и текущее количество в представление
         return view('admin.products.show', compact('product', 'currentQuantity', 'orders'));
     }
@@ -173,7 +173,7 @@ class AdminProductController extends Controller
         $categories = Category::all(); // Получаем все категории
         $brands = Brand::all(); // Получаем все бренды (если нужно)
         $menus = Menu::all();  // Добавляем список меню
-        
+
         // На этом этапе images уже будет массивом, благодаря кастингу
         $images = $product->images;
         // dd($images); //[ 0 => "product01.png" ]
@@ -211,10 +211,10 @@ class AdminProductController extends Controller
             'is_new' => 'required|boolean',
             'position' => 'nullable|integer|min:0',
         ]);
-    
+
         // Собираем данные из запроса
         $data = $request->all();
-    
+
         // Проверяем загрузку файлов
         if ($request->hasFile('images')) {
             // Удаление старых изображений
@@ -225,38 +225,38 @@ class AdminProductController extends Controller
                     }
                 }
             }
-    
+
             // Загрузка новых изображений
             $imagePaths = [];
             foreach ($request->file('images') as $image) {
                 try {
                     // Получаем оригинальное имя файла
                     $filename = $image->getClientOriginalName();
-    
+
                     // Сохраняем файл с оригинальным именем в папку 'public'
                     $path = $image->storeAs('', $filename, 'public'); // Указываем 'products' как папку для сохранения
-    
+
                     // Добавляем путь к изображению в массив
                     $imagePaths[] = $filename;
                 } catch (\Exception $e) {
                     return redirect()->back()->withErrors(['images' => 'Ошибка при загрузке изображения: ' . $e->getMessage()]);
                 }
             }
-    
+
             // Сохраняем пути к изображениям в массив данных
             $data['images'] = $imagePaths;
         } else {
             // Если новые изображения не загружены, оставляем старые
             $data['images'] = $product->images;
         }
-    
+
         // Обновляем продукт
         $product->update($data);
-    
+
         return redirect()->route('admin.products.index')->with('success', 'Продукт обновлен успешно');
     }
-    
-    
+
+
 
     // Удалить продукт
     public function destroy(Product $product)
