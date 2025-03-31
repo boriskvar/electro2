@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Comparison;
 use Illuminate\Http\Request;
@@ -12,17 +13,30 @@ class AdminComparisonController extends Controller
     // Список всех сравнений
     public function index()
     {
-        $comparisons = Comparison::with('products')->paginate(10);  // Получаем все сравнения с продуктами
-        $allProducts = Product::all();  // Получаем все продукты для добавления в сравнение
+        $comparisons = Comparison::with(['user', 'products'])->get();
+        $users = User::all();
+        $products = Product::all();
 
-        return view('admin.comparisons.index', compact('comparisons', 'allProducts'));
+        return view('admin.comparisons.index', compact('comparisons', 'users', 'products'));
     }
 
     // Создание нового сравнения
     public function store(Request $request)
     {
-        $comparison = Comparison::create(['user_id' => $request->user_id]);
-        return redirect()->route('admin.comparisons.index')->with('success', 'Сравнение создано.');
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        // Получаем или создаем сравнение для пользователя
+        $comparison = Comparison::firstOrCreate(['user_id' => $request->user_id]);
+
+        // Добавляем товар в сравнение
+        if (!$comparison->products()->where('product_id', $request->product_id)->exists()) {
+            $comparison->products()->attach($request->product_id);
+        }
+
+        return redirect()->route('admin.comparisons.index')->with('success', 'Товар добавлен в сравнение');
     }
 
     // Просмотр конкретного сравнения
@@ -33,10 +47,12 @@ class AdminComparisonController extends Controller
     }
 
     // Удаление всего сравнения
-    public function destroy(Comparison $comparison)
+    public function destroy($id)
     {
+        $comparison = Comparison::findOrFail($id);
         $comparison->delete();
-        return redirect()->route('admin.comparisons.index')->with('success', 'Сравнение удалено.');
+
+        return redirect()->route('admin.comparisons.index')->with('success', 'Сравнение удалено');
     }
 
     // Очистка списка сравнения (удаляет все товары)
