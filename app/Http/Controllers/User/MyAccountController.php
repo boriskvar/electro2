@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Cart;
+use App\Models\Product;
 use App\Models\Wishlist;
 use App\Models\Comparison;
 use Illuminate\Http\Request;
+use App\Models\CategoryAttribute;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ProductCategoryAttribute;
 
 class MyAccountController extends Controller
 {
@@ -65,14 +69,37 @@ class MyAccountController extends Controller
     // Страница "Compare"
     public function compare()
     {
-        $compare = Comparison::where('user_id', Auth::id())->with('products')->get();
+        // Получаем все атрибуты категории
+        $categoryAttributes = CategoryAttribute::all();
+        // dd($categoryAttributes);
 
+        // Получаем все товары, которые будем сравнивать
+        $comparisonProductIds = DB::table('comparison_product')->pluck('product_id');
+        $products = Product::whereIn('id', $comparisonProductIds)->with('attributes')->get();
+        // dd($products); //надо получить, не все товары, а только те что находятся в таблице comparison_product (со значением поля product_id)
 
-        return view('user.my-account', [
-            'activePage' => 'wishlist',
-            'compare' => $compare
-        ]);
+        $productData = [];
+
+        foreach ($products as $product) {
+            // Получаем атрибуты для каждого товара
+            $productAttributes = ProductCategoryAttribute::where('product_id', $product->id)->get()->keyBy('category_attribute_id');
+
+            $productData[] = [
+                'name' => $product->name,
+                'attributes' => $categoryAttributes->mapWithKeys(function ($attribute) use ($productAttributes) {
+                    // Для каждого атрибута, получаем значение из product_category_attributes
+                    // dd($attribute->attribute_name); //"processor" 
+                    return [$attribute->attribute_name => $productAttributes[$attribute->id]->value ?? '—'];
+                })->toArray(),
+                'price' => number_format($product->price, 0, '.', ' ') . ' грн',
+            ];
+        }
+        // dd($productData);
+        // Передаем все данные в представление
+        return view('user.compare.index', compact('productData', 'categoryAttributes', 'products'));
     }
+
+
 
     public function addToCompare(Request $request)
     {
@@ -80,10 +107,15 @@ class MyAccountController extends Controller
             'product_id' => 'required|exists:products,id',
         ]);
 
-        $comparison = Comparison::firstOrCreate([
-            // 'user_id' => auth()->id(),
-            'user_id' => Auth::id(),
-        ]);
+        $comparison = Comparison::firstOrCreate(
+            ['user_id' => Auth::id()],
+            ['created_at' => now(), 'updated_at' => now()] // Добавляем даты
+        );
+
+        // Убеждаемся, что у объекта есть ID
+        if (!$comparison->exists) {
+            $comparison->save();
+        }
 
         $comparison->products()->syncWithoutDetaching([$request->product_id]);
 

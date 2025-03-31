@@ -94,4 +94,9 @@ class Product extends Model
         return $this->belongsToMany(CategoryAttribute::class, 'product_category_attributes')
             ->withPivot('value');
     }
+
+    public function attributes()
+    {
+        return $this->hasMany(ProductCategoryAttribute::class, 'product_id');
+    }
 }

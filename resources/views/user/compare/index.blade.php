@@ -1,42 +1,70 @@
-@extends('layouts.my-account')
+@extends('layouts.main')
 
 @section('content')
-<div class="container">
-    <h3>Сравнение товаров</h3>
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title text-center">
+                    <h3 class="title">Сравнение товаров</h3>
+                </div>
+            </div>
+        </div>
 
-    @if($comparisons->isEmpty())
-    <p>Вы еще не добавили товары для сравнения.</p>
-    @else
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Товар</th>
-                <th>Действие</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($comparisons as $comparison)
-            @foreach($comparison->products as $product)
-            <tr>
-                <td>{{ $product->name }}</td>
-                <td>
-                    <form action="{{ route('compare.remove') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <button class="btn btn-warning">Удалить</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-            @endforeach
-        </tbody>
-    </table>
+        <div class="row">
+            <table class="comparison-table table-bordered text-center">
+                <!-- Проверка на наличие товаров -->
+                <tr>
+                    @if(empty($products))
+                    <td colspan="5" class="text-center">Вы еще не добавили товары для сравнения.</td>
+                    @else
+                    @foreach($products as $product)
+                    <td class="value-cell col-md-{{ 12 / count($products) }} text-center" style="background-color: transparent;">
+                        {{ $product['name'] }}
+                    </td>
+                    @endforeach
+                    @endif
+                </tr>
 
-    <form action="{{ route('compare.clear') }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button class="btn btn-danger">Очистить сравнение</button>
-    </form>
-    @endif
+                <!-- Динамический вывод атрибутов -->
+                @foreach($categoryAttributes as $attribute)
+                <tr>
+                    <!-- Заголовок для каждой характеристики -->
+                    <th class="attribute-header" colspan="{{ 1 + count($products) }}">
+                        {{ $attribute->attribute_name }}
+                    </th>
+                </tr>
+
+
+                <tr>
+                    @foreach($products as $product)
+                    @php
+                    // Ищем значение атрибута по его ID
+                    $attributeValue = $product->attributes->firstWhere('category_attribute_id', $attribute->id);
+                    @endphp
+                    <td class="value-cell col-md-{{ 12 / count($products) }} text-center" style="background-color: transparent;">
+                        {{ $attributeValue->value ?? '—' }}
+                    </td>
+                    @endforeach
+                </tr>
+
+
+                @endforeach
+            </table>
+        </div>
+    </div>
 </div>
+
+<style>
+    /* Стиль для заголовков характеристик */
+    .attribute-header {
+        position: relative;
+        padding: 12px 0;
+        text-align: center;
+        font-weight: 700;
+        line-height: 1;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+</style>
 @endsection
