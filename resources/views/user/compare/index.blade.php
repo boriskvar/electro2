@@ -10,6 +10,24 @@
                 </div>
             </div>
         </div>
+        @if(!$products->isEmpty())
+        <div class="row text-center" style="margin-bottom: 15px;">
+            <div class="col-md-12">
+                <h4 class="category-title" style="display: inline-block; margin-right: 15px;">
+                    {{ $products->first()->category->name }}
+                </h4>
+                <!-- Форма для удаления всех товаров из сравнения -->
+                <form action="{{ route('compare.clear') }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-link text-danger" onclick="return confirm('Вы уверены, что хотите очистить сравнение?')" style="font-size: 18px; vertical-align: middle; border: none; background: none;">
+                        <i class="close-icon">✖</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        @endif
+
 
         <div class="row">
             @if($products->isEmpty())
@@ -19,39 +37,41 @@
             @else
             @foreach($products as $product)
             <div class="col-md-{{ 12 / count($products) }} text-center">
+                <!-- Иконка удаления -->
+                <!-- Форма для удаления товара из сравнения -->
+                <form action="{{ route('compare.remove') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <button type="submit" class="btn btn-link text-danger" onclick="return confirm('Удалить этот товар из сравнения?')" style="font-size: 18px; border: none; background: none;">
+                        <i class="close-icon">✖</i>
+                    </button>
+                </form>
+
+
                 <div class="product-widget">
                     <!-- Изображение товара сверху -->
-                    <div class="product-img mb-2">
-                        <img src="{{ asset('storage/img/' .$product->images[0]) }}" alt="{{ $product->name }}" class="product-img" style="max-width: 120px; margin-bottom: 10px;">
+                    <div class="product-img" style="margin-bottom: 10px;">
+                        <img id="alttext-image" src="{{ asset('storage/img/' . $product->images[0]) }}" alt="{{ $product->name }}" class="img-responsive center-block">
+                    </div>
+                    <div class="product-body">
+                        <!-- Название товара -->
+                        <h3 class="product-name">
+                            <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
+                        </h3>
+                        <!-- Цена товара -->
+                        <h4 class="product-price">
+                            @if ($product->old_price)
+                            <del class="product-old-price">${{ $product->old_price }}</del>
+                            @endif
+                            ${{ $product->price }}
+                        </h4>
                     </div>
 
-                    <!-- Иконка удаления -->
-                    <form action="{{ route('compare.remove', $product->id) }}" method="POST" class="position-relative" style="top: -20px; right: -5px;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-link p-0">
-                            <i class="fa fa-trash text-danger"></i>
-                        </button>
-                    </form>
-
-                    <!-- Название товара -->
-                    <h3 class="product-name">
-                        <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
-                    </h3>
-
-                    <!-- Цена товара -->
-                    <h4 class="product-price text-bold text-danger">
-                        ${{ $product->price }}
-                        @if ($product->old_price)
-                        <del class="product-old-price">${{ $product->old_price }}</del>
-                        @endif
-                    </h4>
                 </div>
             </div>
             @endforeach
             @endif
         </div>
-
         <!-- Динамический вывод атрибутов -->
         @foreach($categoryAttributes as $attribute)
         <div class="row">
@@ -93,6 +113,17 @@
         font-size: 14px;
         color: #333;
         border-top: 1px solid #f5f5f5;
+    }
+
+    .close-icon {
+        font-size: 24px;
+        color: #ea0d0d;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        line-height: 24px;
+        aspect-ratio: 1 / 1;
+        transition: color 0.2s ease-in-out;
     }
 </style>
 
