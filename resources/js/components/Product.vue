@@ -47,7 +47,7 @@
                             <i class="fa fa-heart-o"></i>
                             <span class="tooltipp">add to wishlist</span>
                         </button>
-                        <button class="add-to-compare">
+                        <button class="add-to-compare" @click="addToCompare(product)">
                             <i class="fa fa-exchange"></i>
                             <span class="tooltipp">add to compare</span>
                         </button>
@@ -118,7 +118,7 @@ export default {
 
         // Метод добавления товара в Wishlist
         addToWishlist(product) {
-            fetch('/account/wishlist/store', {
+            fetch('/my-account/wishlist/store', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -153,6 +153,44 @@ export default {
                     );
                 });
         },
+
+        // Метод добавления товара в сравнение
+        addToCompare(product) {
+            fetch('/my-account/compare/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({ product_id: product.id }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        window.dispatchEvent(
+                            new CustomEvent('showToast', {
+                                detail: { message: 'Товар добавлен в сравнение', type: 'success' },
+                            })
+                        );
+                        location.reload(); // Перезагружаем страницу, если нужно
+                    } else {
+                        window.dispatchEvent(
+                            new CustomEvent('showToast', {
+                                detail: { message: data.message, type: 'error' },
+                            })
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error('Ошибка при добавлении в сравнение:', error);
+                    window.dispatchEvent(
+                        new CustomEvent('showToast', {
+                            detail: { message: 'Ошибка при добавлении в сравнение', type: 'error' },
+                        })
+                    );
+                });
+        },
+
     },
 };
 </script>

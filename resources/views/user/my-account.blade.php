@@ -30,46 +30,48 @@
                     <h3>My Wishlist</h3>
                     <p>Список товаров, добавленных в список желаний.</p>
 
-                    {{-- <div id="wishlist-products" data-products="{{ json_encode($products) }}" >
-                    <product :products="products" view-type="grid"></product>
-                </div> --}}
+                    <div id="wishlist-products" data-products="{{ json_encode($products) }}">
+                        <product :products="products" view-type="grid"></product>
+                    </div>
 
-                @elseif ($activePage === 'cart')
-                <h3>My Cart</h3>
-                <p>Список товаров, добавленных в корзину.</p>
+                    @elseif ($activePage === 'cart')
+                    <h3>My Cart</h3>
+                    <p>Список товаров, добавленных в корзину.</p>
 
-                <div id="cart-products" data-products="{{ json_encode($products) }}">
-                    <cart :cart-items="products"></cart>
+                    <div id="cart-products" data-products="{{ json_encode($products) }}">
+                        <cart :cart-items="products"></cart>
+                    </div>
+
+                    @elseif ($activePage === 'orders')
+                    <h3>My Orders</h3>
+                    <p>История заказов.</p>
+
+                    @elseif ($activePage === 'compare')
+                    <h3>Compare list</h3>
+                    <p>Товары добавленные в список сравнения.</p>
+                    @include('user.compare.index')
+
+
+                    @elseif ($activePage === 'products')
+                    <h3>Viewed products</h3>
+                    <p>Просмотренные товары.</p>
+
+                    @elseif ($activePage === 'reviews')
+                    <h3>My reviews</h3>
+                    <p>Мои отзывы о товарах.</p>
+
+                    @endif
                 </div>
-
-                @elseif ($activePage === 'orders')
-                <h3>My Orders</h3>
-                <p>История заказов.</p>
-
-                @elseif ($activePage === 'compare')
-                @include('user.compare.index') {{-- Включаем страницу сравнения товаров --}}
-                {{-- <h3>Compare list</h3>
-                <p>Товары добавленные в список сравнения.</p> --}}
-
-                @elseif ($activePage === 'products')
-                <h3>Viewed products</h3>
-                <p>Просмотренные товары.</p>
-
-                @elseif ($activePage === 'reviews')
-                <h3>My reviews</h3>
-                <p>Мои отзывы о товарах.</p>
-
-                @endif
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <style>
     /* Устанавливаем ширину сайдбара */
     .sidebar {
-        width: 150px;
+        /* width: 150px; */
+        width: 100%;
         /* Установите нужную ширину */
         background-color: #f8f9fa;
         /* Цвет фона */

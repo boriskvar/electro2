@@ -23,7 +23,7 @@ class MyAccountController extends Controller
 
     // Страница "Wishlist"
     // Желания (Wishlist)
-    public function wishlist()
+    public function wishlist(Request $request)
     {
         $userId = Auth::id();
         $wishlists = Wishlist::where('user_id', $userId)->with('product')->get();
@@ -35,11 +35,40 @@ class MyAccountController extends Controller
         });
         // dd($products);
 
+        // Если запрос идет через AJAX (например, из Vue), возвращаем JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'wishlists' => $wishlists,
+                'wishlistCount' => $wishlistCount,
+                'products' => $products,
+            ]);
+        }
+
+        // Если обычный запрос (например, от браузера), возвращаем HTML-страницу
         return view('user.my-account', [
             'activePage' => 'wishlist',
             'wishlists' => $wishlists,
             'wishlistCount' => $wishlistCount,
-            'products' => $products, // Передаем товары в шаблон
+            'products' => $products,
+        ]);
+    }
+
+
+    public function storeWishlist(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        Wishlist::firstOrCreate([
+            'user_id' => Auth::id(),
+            'product_id' => $request->product_id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Товар добавлен в Wishlist',
         ]);
     }
 
@@ -96,7 +125,13 @@ class MyAccountController extends Controller
         }
         // dd($productData);
         // Передаем все данные в представление
-        return view('user.compare.index', compact('productData', 'categoryAttributes', 'products'));
+        // return view('user.compare.index', compact('productData', 'categoryAttributes', 'products'));
+        return view('user.my-account', [
+            'productData' => $productData,
+            'categoryAttributes' => $categoryAttributes,
+            'products' => $products,
+            'activePage' => 'compare'  // Добавляем активную страницу
+        ]);
     }
 
 
@@ -119,7 +154,11 @@ class MyAccountController extends Controller
 
         $comparison->products()->syncWithoutDetaching([$request->product_id]);
 
-        return redirect()->back()->with('success', 'Товар добавлен в сравнение.');
+        // return redirect()->back()->with('success', 'Товар добавлен в сравнение.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Товар добавлен в сравнение.'
+        ]);
     }
 
     public function removeFromCompare(Request $request)

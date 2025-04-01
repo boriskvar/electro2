@@ -109,10 +109,14 @@
 
     /* Стиль для ячеек значений */
     .value-cell {
-        padding: 10px;
-        font-size: 14px;
+        /* padding: 10px; */
+        font-size: 12px;
         color: #333;
-        border-top: 1px solid #f5f5f5;
+        /* border: 2px solid #f5f5f5; */
+        /* Сделает рамку у значений */
+        /* background-color: #f5f5f5; */
+        /* Цвет фона как у заголовков */
+
     }
 
     .close-icon {
