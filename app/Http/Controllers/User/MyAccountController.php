@@ -73,6 +73,20 @@ class MyAccountController extends Controller
     }
 
 
+    public function removeFromWishlist($id)
+    {
+        $wishlist = Wishlist::where('user_id', Auth::id())->where('product_id', $id)->first();
+
+        if ($wishlist) {
+            $wishlist->delete();
+            return redirect()->back()->with('success', 'Товар удалён из Wishlist.');
+        }
+
+        return redirect()->back()->with('error', 'Товар не найден в Wishlist.');
+    }
+
+
+
     // Страница "Cart"
     public function cart()
     {

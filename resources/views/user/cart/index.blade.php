@@ -240,10 +240,8 @@
                                                         <button-product-page>
                                                             <a href="{{ route('admin.products.show', $item->product_id) }}" title="{{ $item->product->name }}">
                                                                 @php
-                                                                $images = json_decode(
-                                                                $item->product->images,
-                                                                true,
-                                                                );
+                                                                $images =
+                                                                $item->product->images;
                                                                 @endphp
                                                                 @if ($images && isset($images[0]) && Storage::disk('public')->exists('img/' . basename($images[0])))
                                                                 <img src="{{ asset('storage/img/' . basename($images[0])) }}" alt="{{ $item->product->name }}" style="max-width: 50px; height: auto;">

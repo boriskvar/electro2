@@ -70,6 +70,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-account', [MyAccountController::class, 'index'])->name('my-account');
     Route::get('/my-account/wishlist', [MyAccountController::class, 'wishlist'])->name('wishlist.index');
     Route::post('/my-account/wishlist/store', [MyAccountController::class, 'storeWishlist'])->name('wishlist.store');
+    Route::delete('/my-account/wishlist/{id}', [MyAccountController::class, 'removeFromWishlist'])->name('wishlist.remove');
+
 
     Route::get('/my-account/cart', [MyAccountController::class, 'cart'])->name('cart.index');
     Route::get('/my-account/orders', [MyAccountController::class, 'orders'])->name('orders.index');
