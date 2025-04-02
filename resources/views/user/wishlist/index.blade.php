@@ -1,4 +1,4 @@
-@section('content')
+{{-- @section('content') --}}
 {{-- <p>Шаблон wishlist загружен успешно!</p> --}}
 {{-- <div class="section"> --}}
 <div class="container">
@@ -140,4 +140,4 @@
     });
 </script>
 
-@endsection
+{{-- @endsection --}}

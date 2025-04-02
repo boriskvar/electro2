@@ -1,6 +1,6 @@
-@extends('layouts.main')
+{{-- @extends('layouts.main') --}}
 
-@section('content')
+{{-- @section('content') --}}
 <div class="section">
     <div class="container">
         <div class="row">
@@ -37,8 +37,7 @@
             @else
             @foreach($products as $product)
             <div class="col-md-{{ 12 / count($products) }} text-center">
-                <!-- Иконка удаления -->
-                <!-- Форма для удаления товара из сравнения -->
+                <!-- Кнопка удаления (крестик) -->
                 <form action="{{ route('compare.remove') }}" method="POST" style="display: inline;">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -47,14 +46,14 @@
                     </button>
                 </form>
 
-
+                <!-- Картинка товара (теперь под крестиком) -->
+                <div class="product-img" style="margin-bottom: 10px;">
+                    <img id="alttext-image" src="{{ asset('storage/img/' . $product->images[0]) }}" alt="{{ $product->name }}" class="img-responsive center-block">
+                </div>
                 <div class="product-widget">
-                    <!-- Изображение товара сверху -->
-                    <div class="product-img" style="margin-bottom: 10px;">
-                        <img id="alttext-image" src="{{ asset('storage/img/' . $product->images[0]) }}" alt="{{ $product->name }}" class="img-responsive center-block">
-                    </div>
+
+                    <!-- Название и цена товара (под картинкой) -->
                     <div class="product-body">
-                        <!-- Название товара -->
                         <h3 class="product-name">
                             <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
                         </h3>
@@ -129,6 +128,12 @@
         aspect-ratio: 1 / 1;
         transition: color 0.2s ease-in-out;
     }
+
+    .product-img img {
+        max-width: 80px;
+        /* Фиксированная ширина */
+        /* height: auto; */
+    }
 </style>
 
-@endsection
+{{-- @endsection --}}

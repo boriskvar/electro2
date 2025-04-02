@@ -1,5 +1,5 @@
-@extends('layouts.main')
-@section('content')
+{{-- @extends('layouts.main') --}}
+{{-- @section('content') --}}
 
 <body>
     <!--nghm-->
@@ -2068,7 +2068,7 @@
                     }
 
                     // Возвращаемся на предыдущую страницу
-                    history.back();
+                    // history.back();
                 });
             } else {
                 console.warn('Кнопка закрытия не найдена внутри modal-close-btn');
@@ -2363,4 +2363,4 @@
 </script>
 
 
-@endsection
+{{-- @endsection --}}

@@ -22,7 +22,6 @@ class MyAccountController extends Controller
     }
 
     // Страница "Wishlist"
-    // Желания (Wishlist)
     public function wishlist(Request $request)
     {
         // dd('Шаблон загружается через wishlist()');
@@ -96,9 +95,14 @@ class MyAccountController extends Controller
         $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
 
         // Передаем в представление
-        return view('user.cart.index', [
+        /* return view('user.cart.index', [
             'activePage' => 'cart',
             'cartItems' => $cartItems,
+        ]); */
+        return view('user.my-account', [
+            'activePage' => 'cart',
+            'cartItems' => $cartItems,
+            'products' => $cartItems->pluck('product') // если ваш Vue-компонент ожидает products
         ]);
     }
 

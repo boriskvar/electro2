@@ -88,7 +88,7 @@
                                <h5>SUBTOTAL: ${{ $cartItems->sum('price_x_quantity') ?? 0 }}</h5>
                            </div>
                            <div class="cart-btns">
-                               <a href="{{ route('user.cart.index') }}">View Cart</a>
+                               <a href="{{ route('cart.index') }}">View Cart</a>
                                <a href="{{ route('checkout.index') }}">Checkout <i class="fa fa-arrow-circle-right"></i></a>
                            </div>
                        </div>
