@@ -71,17 +71,8 @@
 <script>
 export default {
     props: {
-        products: {
-            type: Array,
-            default: () => []
-        },
+        products: Array,
         viewType: String,
-    },
-    mounted() {
-        if (!Array.isArray(this.products)) {
-            console.error("Некорректные данные в products, ожидается массив.");
-            this.products = [];
-        }
     },
     methods: {
         getImageUrl(image) {
