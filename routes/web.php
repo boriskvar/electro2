@@ -68,8 +68,10 @@ Route::middleware('auth')->group(function () {
 // "My Account" - личный кабинет пользователя
 Route::middleware('auth')->group(function () {
     Route::get('/my-account', [MyAccountController::class, 'index'])->name('my-account');
+
     Route::get('/my-account/wishlist', [MyAccountController::class, 'wishlist'])->name('wishlist.index');
     Route::post('/my-account/wishlist/store', [MyAccountController::class, 'storeWishlist'])->name('wishlist.store');
+
     Route::delete('/my-account/wishlist/{id}', [MyAccountController::class, 'removeFromWishlist'])->name('wishlist.remove');
 
 

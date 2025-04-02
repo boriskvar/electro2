@@ -25,17 +25,20 @@ class MyAccountController extends Controller
     // Желания (Wishlist)
     public function wishlist(Request $request)
     {
+        // dd('Шаблон загружается через wishlist()');
         $userId = Auth::id();
+
+        // Загружаем товары из Wishlist с привязанными продуктами
         $wishlists = Wishlist::where('user_id', $userId)->with('product')->get();
+        // dd($wishlists);
+
         $wishlistCount = $wishlists->count();
 
-        // Преобразуем коллекцию Wishlist в массив товаров
-        $products = $wishlists->map(function ($wishlist) {
-            return $wishlist->product;
-        });
+        // Собираем список продуктов
+        $products = $wishlists->pluck('product');
         // dd($products);
 
-        // Если запрос идет через AJAX (например, из Vue), возвращаем JSON
+        // Возвращаем JSON при AJAX-запросе
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
@@ -45,13 +48,7 @@ class MyAccountController extends Controller
             ]);
         }
 
-        // Если обычный запрос (например, от браузера), возвращаем HTML-страницу
-        /*  return view('user.my-account', [
-            'activePage' => 'wishlist',
-            'wishlists' => $wishlists,
-            'wishlistCount' => $wishlistCount,
-            'products' => $products,
-        ]); */
+        // Возвращаем HTML-шаблон с сайдбаром
         return view('user.my-account', [
             'activePage' => 'wishlist',
             'wishlists' => $wishlists,
