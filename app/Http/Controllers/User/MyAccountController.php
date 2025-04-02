@@ -46,6 +46,12 @@ class MyAccountController extends Controller
         }
 
         // Если обычный запрос (например, от браузера), возвращаем HTML-страницу
+        /*  return view('user.my-account', [
+            'activePage' => 'wishlist',
+            'wishlists' => $wishlists,
+            'wishlistCount' => $wishlistCount,
+            'products' => $products,
+        ]); */
         return view('user.my-account', [
             'activePage' => 'wishlist',
             'wishlists' => $wishlists,
@@ -71,6 +77,20 @@ class MyAccountController extends Controller
             'message' => 'Товар добавлен в Wishlist',
         ]);
     }
+
+    public function removeFromWishlist($id)
+    {
+        $wishlist = Wishlist::where('user_id', Auth::id())->where('product_id', $id)->first();
+
+        if (!$wishlist) {
+            return response()->json(['success' => false, 'message' => 'Товар не найден в Wishlist.'], 404);
+        }
+
+        $wishlist->delete();
+        return response()->json(['success' => true, 'message' => 'Товар удалён из Wishlist.']);
+    }
+
+
 
     // Страница "Cart"
     public function cart()

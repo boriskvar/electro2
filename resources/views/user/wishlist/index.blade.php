@@ -18,6 +18,14 @@
             @foreach ($wishlists as $wishlistItem)
             <div class="col-md-3 col-xs-6">
                 <div class="product">
+
+                    <div class="product-btns">
+                        <button class="remove-from-wishlist" onclick="removeFromWishlist({{ $wishlistItem->product->id }})">
+                            <i class="fa fa-trash"></i>
+                            <span class="tooltipp">Удалить из сравнения</span>
+                        </button>
+                    </div>
+
                     <div class="product-img">
                         @php
                         $firstImage = $wishlistItem->product->images[0] ?? null;
@@ -42,9 +50,9 @@
                         </h3>
                         <h4 class="product-price">
                             ${{ number_format($wishlistItem->product->price, 2) }}
-                            @if ($wishlistItem->product->oldPrice)
+                            @if ($wishlistItem->product->old_price)
                             <del class="product-old-price">
-                                ${{ number_format($wishlistItem->product->oldPrice, 2) }}
+                                ${{ number_format($wishlistItem->product->old_price, 2) }}
                             </del>
                             @endif
                         </h4>
@@ -52,12 +60,7 @@
                             @for ($i = 1; $i <= 5; $i++) <i class="fa {{ $i <= round($wishlistItem->product->rating) ? 'fa-star' : 'fa-star-o' }}"></i>
                                 @endfor
                         </div>
-                        <div class="product-btns">
-                            <button class="remove-from-wishlist" onclick="removeFromWishlist({{ $wishlistItem->id }})">
-                                <i class="fa fa-trash"></i>
-                                <span class="tooltipp">Удалить</span>
-                            </button>
-                        </div>
+
                     </div>
                     <div class="add-to-cart">
                         <button class="add-to-cart-btn" onclick="addToCart({{ $wishlistItem->product->id }})">
@@ -109,9 +112,12 @@
 
         // === Функция удаления из wishlist ===
         window.removeFromWishlist = function(wishlistId) {
+            if (!confirm("Вы уверены, что хотите удалить этот товар из Wishlist?")) {
+                return; // Если пользователь нажал "Отмена", ничего не делаем
+            }
             console.log("Удаление из wishlist:", wishlistId);
 
-            fetch(`/account/wishlist/${wishlistId}`, {
+            fetch(`/my-account/wishlist/${wishlistId}`, {
                     method: 'DELETE'
                     , headers: {
                         'Content-Type': 'application/json'
