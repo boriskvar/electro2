@@ -116,7 +116,7 @@ class MyAccountController extends Controller
 
 
     // Страница "Compare"
-    public function compare()
+    /*     public function compare()
     {
         // Получаем все атрибуты категории
         $categoryAttributes = CategoryAttribute::all();
@@ -152,9 +152,47 @@ class MyAccountController extends Controller
             'products' => $products,
             'activePage' => 'compare'  // Добавляем активную страницу
         ]);
+    } */
+
+    public function compare()
+    {
+        $comparison = Comparison::where('user_id', Auth::id())->first();
+
+        // Если нет записей сравнения или товаров - возвращаем пустые данные
+        if (!$comparison || $comparison->products()->count() === 0) {
+            return view('user.my-account', [
+                'products' => collect(),
+                'categoryAttributes' => collect(),
+                'productData' => [],
+                'activePage' => 'compare'
+            ]);
+        }
+
+        $products = $comparison->products()->with('attributes', 'category')->get();
+        $category = $products->first()->category;
+        $categoryAttributes = $category->attributes;
+
+        $productData = [];
+
+        foreach ($products as $product) {
+            $productAttributes = $product->attributes->keyBy('category_attribute_id');
+
+            $productData[] = [
+                'product' => $product,
+                'attributes' => $categoryAttributes->mapWithKeys(function ($attribute) use ($productAttributes) {
+                    return [$attribute->attribute_name => $productAttributes[$attribute->id]->value ?? '—'];
+                })->toArray()
+            ];
+        }
+
+        return view('user.my-account', [
+            'products' => $products,
+            'categoryAttributes' => $categoryAttributes,
+            'productData' => $productData,
+            'activePage' => 'compare',
+            'category' => $category
+        ]);
     }
-
-
 
     public function addToCompare(Request $request)
     {
