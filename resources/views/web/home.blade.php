@@ -117,8 +117,8 @@
                                                 @endfor
                                         </div>
                                         <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                                            <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                            <button class="add-to-compare" onclick="addToCompare({{ $product->id }})"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                                         </div>
                                     </div>
@@ -258,7 +258,7 @@
                                                 @endfor
                                         </div>
                                         <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                            <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
                                             <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                                         </div>
@@ -464,6 +464,75 @@
                     showToast("Ошибка при добавлении товара", "error");
                 });
         };
+        // === Функция добавления в wishlist ===
+        window.addToWishlist = function(productId) {
+            console.log("Добавление в wishlist:", productId);
+
+            fetch('/my-account/wishlist/store', {
+                    method: 'POST'
+                    , headers: {
+                        'Content-Type': 'application/json'
+                        , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                    , body: JSON.stringify({
+                        product_id: productId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Товар добавлен в список желаемого!");
+                        // Меняем иконку сердечка и блокируем кнопку
+                        let btn = document.querySelector(`button[onclick="addToWishlist(${productId})"]`);
+                        if (btn) {
+                            btn.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">added</span>';
+                            btn.disabled = true; // Отключаем кнопку после добавления
+                        }
+                    } else {
+                        alert("Ошибка при добавлении в Wishlist");
+                    }
+                })
+                .catch(error => {
+                    console.error("Ошибка добавления в wishlist:", error);
+                    alert("Ошибка при добавлении товара в Wishlist");
+                });
+        };
+
+        // === Функция добавления в сравнение ===
+        window.addToCompare = function(productId) {
+            console.log("Добавление в сравнение:", productId);
+
+            fetch('/my-account/compare/add', {
+                    method: 'POST'
+                    , headers: {
+                        'Content-Type': 'application/json'
+                        , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                    , body: JSON.stringify({
+                        product_id: productId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Товар добавлен в сравнение!");
+                        // Меняем иконку и блокируем кнопку
+                        let btn = document.querySelector(`button[onclick="addToCompare(${productId})"]`);
+                        if (btn) {
+                            btn.innerHTML = '<i class="fa fa-exchange"></i><span class="tooltipp">added</span>';
+                            btn.disabled = true; // Отключаем кнопку
+                        }
+                    } else {
+                        alert("Ошибка при добавлении в сравнение");
+                    }
+                })
+                .catch(error => {
+                    console.error("Ошибка добавления в сравнение:", error);
+                    alert("Ошибка при добавлении товара в сравнение");
+                });
+        };
+
+
     });
 </script>
 
