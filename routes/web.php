@@ -14,10 +14,11 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\QuickViewController;
 use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\NewsletterController;
-use App\Http\Controllers\User\MyAccountController;
 
+use App\Http\Controllers\User\MyAccountController;
 use App\Http\Controllers\User\UserOrderController;
 use App\Http\Controllers\User\UserWishlistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -28,6 +29,9 @@ Route::group([], function () {
     Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
     Route::get('/menus/{slug}/category/{category_slug}', [MenuController::class, 'category'])->name('menus.category.show');
     Route::get('menus/{slug}/page/{page_slug}', [MenuController::class, 'page'])->name('menus.page.show');
+
+    // Страница быстрого просмотра
+    Route::get('/quick-view/{productId}', [QuickViewController::class, 'show'])->name('quickview.show');
 
     // Страница поиска
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
