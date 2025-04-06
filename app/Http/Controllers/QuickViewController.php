@@ -9,17 +9,20 @@ class QuickViewController extends Controller
 {
     public function show($productId)
     {
-        $product = Product::with(['category', 'attributes'])->findOrFail($productId);
-        $categoryAttributes = $product->category->attributes;
+        $product = Product::with(['category.attributes', 'attributes'])->findOrFail($productId);
 
-        // Собираем данные, как в сравнении
-        $productData = [
+        // Собираем характеристики по аналогии с сравнением товаров
+        $attributes = $product->category->attributes->mapWithKeys(function ($categoryAttribute) use ($product) {
+            $value = $product->attributes
+                ->firstWhere('category_attribute_id', $categoryAttribute->id)
+                ->value ?? '—'; // значение из pivot
+
+            return [$categoryAttribute->attribute_name => $value];
+        })->toArray();
+
+        return view('web.quick-view.index', [
             'product' => $product,
-            'attributes' => $categoryAttributes->mapWithKeys(function ($attribute) use ($product) {
-                return [$attribute->attribute_name => $product->attributes->where('id', $attribute->id)->first()->pivot->value ?? '—'];
-            })->toArray()
-        ];
-
-        return view('web.quick-view.index', compact('product', 'categoryAttributes', 'productData'));
+            'attributes' => $attributes,
+        ]);
     }
 }
