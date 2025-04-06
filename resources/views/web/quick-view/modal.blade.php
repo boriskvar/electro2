@@ -3,7 +3,6 @@
     <div class="row justify-content-center">
         <div class="col-6 col-sm-4 col-md-3 text-center">
             <div class="product-widget">
-
                 <!-- Название и цена -->
                 <div class="product-body">
                     <img src="{{ $product->images[0] ? asset('storage/img/' . $product->images[0]) : asset('storage/img/default.png') }}" alt="{{ $product->name }}" class="img-responsive center-block" style="max-width: 80px;">
