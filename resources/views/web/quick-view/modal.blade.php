@@ -1,40 +1,62 @@
-<div class="section">
-    <!-- Карточка товара -->
-    <div class="row justify-content-center">
-        <div class="col-6 col-sm-4 col-md-3 text-center">
-            <div class="product-widget">
-                <!-- Название и цена -->
-                <div class="product-body">
-                    <img src="{{ $product->images[0] ? asset('storage/img/' . $product->images[0]) : asset('storage/img/default.png') }}" alt="{{ $product->name }}" class="img-responsive center-block" style="max-width: 80px;">
-                    <h3 class="product-name">
-                        <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
-                    </h3>
-                    <h4 class="product-price">
-                        @if ($product->old_price)
-                        <del class="product-old-price">${{ $product->old_price }}</del>
-                        @endif
-                        ${{ $product->price }}
-                    </h4>
+<!-- Модальное окно -->
+<template>
+    <div id="quickViewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quickViewModalLabel">{{ selectedProduct.name }}</h5>
+                    <button type="button" class="close" @click="closeModal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div v-if="selectedProduct" class="product-details">
+                        <img :src="getImageUrl(selectedProduct.images[0])" alt="Product Image" class="img-responsive">
+                        <h3>{{ selectedProduct.name }}</h3>
+                        <h4>{{ selectedProduct.price }}</h4>
+
+                        <div v-for="(value, attributeName) in selectedAttributes" :key="attributeName">
+                            <h5>{{ attributeName }}</h5>
+                            <p>{{ value }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @click="closeModal">Закрыть</button>
                 </div>
             </div>
         </div>
     </div>
+</template>
 
-    <!-- Характеристики -->
-    <div class="row justify-content-center">
-        <div class="col-6 col-sm-4 col-md-3">
-            <div class="text-center">
-                @foreach($attributes as $attributeName => $value)
-                <div class="attribute-item mb-2">
-                    <h5 class="attribute-header">{{ $attributeName }}</h5>
-                    <div class="value-cell">{{ $value }}</div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
+<script>
+    export default {
+        props: {
+            productData: Object, // Получаем данные продукта и характеристик через пропс
+        }
+        , data() {
+            return {
+                selectedProduct: this.productData.product
+                , selectedAttributes: this.productData.attributes
+            , };
+        }
+        , methods: {
+            getImageUrl(image) {
+                // Метод для получения URL изображения, если нужно
+                return `/storage/images/${image}`;
+            }
+            , closeModal() {
+                // Закрытие модального окна
+                $('#quickViewModal').modal('hide');
+            }
+        , }
+        , mounted() {
+            // Открытие модального окна при монтировании компонента
+            $('#quickViewModal').modal('show');
+        }
+    };
+</script>
 
-</div>
 
 <style>
     .product-widget .product-body {

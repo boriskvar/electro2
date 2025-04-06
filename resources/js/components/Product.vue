@@ -51,7 +51,7 @@
                             <i class="fa fa-exchange"></i>
                             <span class="tooltipp">add to compare</span>
                         </button>
-                        <button class="quick-view" @click="quickView(product)">
+                        <button class="quick-view" @click="quickView(product.id)">
                             <i class="fa fa-eye"></i>
                             <span class="tooltipp">quick view</span>
                         </button>
@@ -65,6 +65,43 @@
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно Быстрого просмотра -->
+    <div class="modal fade" id="quickViewModal" tabindex="-1" role="dialog" aria-labelledby="quickViewModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document"><!-- Используем modal-sm для уменьшенной ширины -->
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quickViewModalLabel">{{ selectedProduct?.name }}</h5>
+                    <!-- Кнопка закрытия (X) -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body" v-if="selectedProduct && selectedAttributes">
+                    <img :src="getImageUrl(selectedProduct.images[0])" class="img-fluid mb-3" alt="Product Image"
+                         style="max-width: 80px; max-height: 80px;">
+
+                    <!-- Показываем только цену отдельно -->
+                    <p><strong>Цена:</strong> {{ selectedProduct.price }}</p>
+
+                    <!-- Отображаем все атрибуты, кроме 'price' и 'image' -->
+                    <div v-for="(value, key) in selectedAttributes" :key="key">
+                        <p><strong>{{ key }}:</strong> {{ value }}</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <!-- Кнопка закрытия внизу -->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </template>
 
 
@@ -74,15 +111,36 @@ export default {
         products: Array,
         viewType: String,
     },
+    inheritAttrs: false, // игнорировать все не определенные атрибуты
+    data() {
+        return {
+            selectedProduct: null,  // Данные о выбранном товаре
+            selectedAttributes: [],  // Характеристики товара
+        };
+    },
     methods: {
         getImageUrl(image) {
             return image ? `/storage/img/${image}` : '/storage/img/default.png';
         },
 
         // Метод добавления товара в быстрые просмотр
-        quickView(product) {
-            // Просто перенаправляем пользователя на страницу быстрого просмотра
-            window.location.href = `/quick-view/${product.id}`;
+        async quickView(productId) {
+            try {
+                const response = await axios.get(`/api/products/${productId}/details`);
+                this.selectedProduct = response.data.product;
+
+                // Фильтруем атрибуты, исключая 'price' и 'image'
+                this.selectedAttributes = Object.fromEntries(
+                    Object.entries(response.data.attributes).filter(
+                        ([key]) => key !== 'price' && key !== 'image'
+                    )
+                );
+
+                // Вызов модального окна через jQuery и Bootstrap 3
+                $('#quickViewModal').modal('show');
+            } catch (error) {
+                console.error('Ошибка при загрузке данных товара:', error);
+            }
         },
 
         // Метод добавления товара в корзину
@@ -141,7 +199,7 @@ export default {
                             })
                         );
                         // Обновление страницы
-                        location.reload(); // Обновляем страницу после успешного добавления товара
+                        location.reload();
                     } else {
                         window.dispatchEvent(
                             new CustomEvent('showToast', {
@@ -178,7 +236,7 @@ export default {
                                 detail: { message: 'Товар добавлен в сравнение', type: 'success' },
                             })
                         );
-                        location.reload(); // Перезагружаем страницу, если нужно
+                        location.reload();
                     } else {
                         window.dispatchEvent(
                             new CustomEvent('showToast', {
@@ -196,7 +254,6 @@ export default {
                     );
                 });
         },
-
     },
 };
 </script>

@@ -99,6 +99,27 @@ class ApiProductController extends Controller
         ]);
     }
 
+    //?  В контроллере
+    public function getProductDetails($productId)
+    {
+        $product = Product::with(['category.attributes', 'attributes'])->findOrFail($productId);
+
+        // Собираем характеристики по аналогии с сравнением товаров
+        $attributes = $product->category->attributes->mapWithKeys(function ($categoryAttribute) use ($product) {
+            $value = $product->attributes
+                ->firstWhere('category_attribute_id', $categoryAttribute->id)
+                ->value ?? '—'; // значение из pivot
+
+            return [$categoryAttribute->attribute_name => $value];
+        })->toArray();
+
+        return response()->json([
+            'product' => $product,
+            'attributes' => $attributes,
+        ]);
+    }
+
+
 
     // Показать один продукт
     public function show(Product $product)
