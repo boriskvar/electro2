@@ -8,12 +8,12 @@ Alpine.start();
 // === Vue.js ===
 import { createApp } from 'vue';
 import Product from './components/Product.vue';
-
+import QuickViewModal from './components/QuickViewModal.vue';
 
 // 📌 Магазин (Vue монтируется на #app и загружает товары через API)
 if (document.getElementById('app')) {
     const app = createApp({
-        components: { Product },
+        components: { Product, QuickViewModal },
         data() {
             return {
                 products: [] // Инициализируем пустым массивом
@@ -36,6 +36,7 @@ if (document.getElementById('app')) {
 
     // 📌 Глобальная регистрация компонента
     app.component('products', Product);
+    app.component('quick-view-modal', QuickViewModal);
 
     app.mount('#app');
 }
