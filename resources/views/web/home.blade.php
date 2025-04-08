@@ -51,258 +51,260 @@
 </div>
 <!-- /SECTION 1-->
 
-<!-- SECTION  2-->
-<div class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-            <!-- ✅ НАЧАЛО обёртки Vue -->
-            <!-- section title -->
-            <div class="col-md-12">
-                <div class="section-title">
-                    <h3 class="title">New Products</h3>
-                    <div class="section-nav">
-                        <ul class="section-tab-nav tab-nav">
-                            @foreach($categories as $category)
-                            <li class="{{ $loop->first ? 'active' : '' }}">
-                                <a href="#tab{{ $category->id }}" data-toggle="tab">{{ $category->name }}</a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /section title -->
-
-            <!-- Products tab & slick -->
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="products-tabs">
-                        <!-- Отображаем вкладки для каждой категории -->
-                        @foreach($categories as $category)
-                        <!-- tab -->
-                        <div id="tab{{ $category->id }}" class="tab-pane {{ $loop->first ? 'active' : '' }}">
-                            <div class="products-slick" data-nav="#slick-nav-{{ $category->id }}">
-                                {{-- @foreach($products->where('category_id', $category->id) as $product) --}}
-                                {{-- @foreach($productsByCategory[$category->name] ?? [] as $product) --}}
-                                @foreach($newProducts->where('category_id', $category->id) as $product)
-                                <!-- product -->
-                                <div class="product">
-                                    <div class="product-img">
-                                        <img src="{{ asset('storage/img/' . $product['images'][0]) }}" alt="{{ $product['name'] }}">
-                                        <div class="product-label">
-                                            @if($product->discount_percentage)
-                                            <span class="sale">-{{ round($product->discount_percentage) }}%</span>
-                                            @endif
-                                            @if($product->is_new)
-                                            <span class="new">NEW</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="product-body">
-                                        <p class="product-category">{{ $product->category->name }}</p>
-                                        <h3 class="product-name"><a href="{{ url('/product/' . $product->id) }}">{{ $product->name }}</a></h3>
-                                        <h4 class="product-price">${{ $product->price }}
-                                            @if($product->old_price)
-                                            <del class="product-old-price">${{ $product->old_price }}</del>
-                                            @endif
-                                        </h4>
-                                        <div class="product-rating">
-                                            @php $rating = round($product->rating); @endphp
-                                            @for ($i = 1; $i <= 5; $i++) @if ($i <=$rating) <i class="fa fa-star"></i>
-                                                @else
-                                                <i class="fa fa-star-o"></i>
-                                                @endif
-                                                @endfor
-                                        </div>
-                                        <div class="product-btns">
-                                            <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare" onclick="addToCompare({{ $product->id }})"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                            <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id ?? 0 }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-                                        </div>
-
-
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <button class="add-to-cart-btn" onclick="addToCart({{ $product->id }})">
-                                            <i class="fa fa-shopping-cart"></i> add to cart
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /product -->
+<div id="app">
+    <!-- SECTION 2-->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- ✅ НАЧАЛО обёртки Vue -->
+                <!-- section title -->
+                <div class="col-md-12">
+                    <div class="section-title">
+                        <h3 class="title">New Products</h3>
+                        <div class="section-nav">
+                            <ul class="section-tab-nav tab-nav">
+                                @foreach($categories as $category)
+                                <li class="{{ $loop->first ? 'active' : '' }}">
+                                    <a href="#tab{{ $category->id }}" data-toggle="tab">{{ $category->name }}</a>
+                                </li>
                                 @endforeach
-                            </div>
-                            <!-- Уникальный nav для каждой категории -->
-                            <div id="slick-nav-{{ $category->id }}" class="products-slick-nav"></div>
+                            </ul>
                         </div>
-                        @endforeach
-                        <!-- /tab -->
                     </div>
                 </div>
+                <!-- /section title -->
 
-                <!-- ✅ ВСТАВЛЯЕМ МОДАЛКУ -->
-                {{-- <quick-view-modal ref="quickModal"></quick-view-modal> --}}
-
-            </div>
-            <!-- ✅ КОНЕЦ обёртки Vue -->
-            <!-- Products tab & slick -->
-
-        </div>
-        <!-- /row -->
-
-    </div>
-    <!-- /container -->
-
-</div>
-<!-- /SECTION  2-->
-
-<!-- HOT DEAL SECTION -->
-<div id="hot-deal" class="section" style="background-image: url('{{ asset('storage/img/hotdeal.png') }}'); background-position: center; background-repeat: no-repeat; background-size: cover;">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="hot-deal">
-                    <ul class="hot-deal-countdown" id="hot-deal-timer">
-                        <li>
-                            <div>
-                                <h3 id="days">00</h3>
-                                <span>Days</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <h3 id="hours">00</h3>
-                                <span>Hours</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <h3 id="minutes">00</h3>
-                                <span>Mins</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <h3 id="seconds">00</h3>
-                                <span>Secs</span>
-                            </div>
-                        </li>
-                    </ul>
-                    <h2 class="text-uppercase">Hot Deal This Week</h2>
-                    <p>New Collection Up to 50% OFF</p>
-                    <a class="primary-btn cta-btn" href=" {{ route('menus.page.show', ['slug' => 'hot-deals', 'page_slug' => 'hot-deals']) }} ">Shop now</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /HOT DEAL SECTION -->
-
-<!-- SECTION 3 -->
-<div class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-
-            <!-- section title -->
-            <div class="col-md-12">
-                <div class="section-title">
-                    <h3 class="title">Top Selling</h3>
-                    <div class="section-nav">
-                        <ul class="section-tab-nav tab-nav">
+                <!-- Products tab & slick -->
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="products-tabs">
+                            <!-- Отображаем вкладки для каждой категории -->
                             @foreach($categories as $category)
-                            <li class="{{ $loop->first ? 'active' : '' }}">
-                                <a href="#tab-top-{{ $category->id }}" data-toggle="tab">{{ $category->name }}</a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /section title -->
-
-            <!-- Products tab & slick -->
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="products-tabs">
-                        <!-- Вкладки для каждой категории -->
-                        @foreach($categories as $category)
-                        <div id="tab-top-{{ $category->id }}" class="tab-pane {{ $loop->first ? 'active' : '' }}">
-                            <div class="products-slick" data-nav="#slick-nav-top-{{ $category->id }}">
-                                {{-- @foreach($products->where('category_id', $category->id)->where('is_top_selling', 1) as $product) --}}
-                                {{-- @foreach($productsByCategory[$category->name]->where('is_top_selling', 1) ?? [] as $product) --}}
-                                {{-- @foreach($productsByCategory[$category->name] ?? []->where('is_top_selling', 1) as $product) --}}
-                                {{-- @foreach(collect($productsByCategory[$category->name] ?? [])->where('is_top_selling', 1) as $product) --}}
-                                @foreach($topSellingProducts->where('category_id', $category->id) as $product)
-                                <!-- product -->
-                                <div class="product">
-                                    <div class="product-img">
-                                        <img src="{{ asset('storage/img/' . $product['images'][0]) }}" alt="{{ $product['name'] }}">
-                                        <div class="product-label">
-                                            @if($product->discount_percentage)
-                                            <span class="sale">-{{ round($product->discount_percentage) }}%</span>
-                                            @endif
-                                            @if($product->is_new)
-                                            <span class="new">NEW</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="product-body">
-                                        <p class="product-category">{{ $product->category->name }}</p>
-                                        <h3 class="product-name"><a href="{{ url('/product/' . $product->id) }}">{{ $product->name }}</a></h3>
-                                        <h4 class="product-price">${{ $product->price }}
-                                            @if($product->old_price)
-                                            <del class="product-old-price">${{ $product->old_price }}</del>
-                                            @endif
-                                        </h4>
-                                        <div class="product-rating">
-                                            @php $rating = round($product->rating); @endphp
-                                            @for ($i = 1; $i <= 5; $i++) @if ($i <=$rating) <i class="fa fa-star"></i>
-                                                @else
-                                                <i class="fa fa-star-o"></i>
+                            <!-- tab -->
+                            <div id="tab{{ $category->id }}" class="tab-pane {{ $loop->first ? 'active' : '' }}">
+                                <div class="products-slick" data-nav="#slick-nav-{{ $category->id }}">
+                                    {{-- @foreach($products->where('category_id', $category->id) as $product) --}}
+                                    {{-- @foreach($productsByCategory[$category->name] ?? [] as $product) --}}
+                                    @foreach($newProducts->where('category_id', $category->id) as $product)
+                                    <!-- product -->
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <img src="{{ asset('storage/img/' . $product['images'][0]) }}" alt="{{ $product['name'] }}">
+                                            <div class="product-label">
+                                                @if($product->discount_percentage)
+                                                <span class="sale">-{{ round($product->discount_percentage) }}%</span>
                                                 @endif
-                                                @endfor
+                                                @if($product->is_new)
+                                                <span class="new">NEW</span>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <div class="product-btns">
-                                            <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                            {{-- <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button> --}}
-                                            <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        {{-- <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button> --}}
-                                        <button class="add-to-cart-btn" onclick="addToCart({{ $product->id }})">
-                                            <i class="fa fa-shopping-cart"></i> add to cart
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- /product -->
-                                @endforeach
-                            </div>
-                            <!-- Уникальный навигатор для каждой категории -->
-                            <div id="slick-nav-top-{{ $category->id }}" class="products-slick-nav"></div>
-                        </div>
-                        @endforeach
-                        <!-- /tab -->
-                    </div>
-                </div>
+                                        <div class="product-body">
+                                            <p class="product-category">{{ $product->category->name }}</p>
+                                            <h3 class="product-name"><a href="{{ url('/product/' . $product->id) }}">{{ $product->name }}</a></h3>
+                                            <h4 class="product-price">${{ $product->price }}
+                                                @if($product->old_price)
+                                                <del class="product-old-price">${{ $product->old_price }}</del>
+                                                @endif
+                                            </h4>
+                                            <div class="product-rating">
+                                                @php $rating = round($product->rating); @endphp
+                                                @for ($i = 1; $i <= 5; $i++) @if ($i <=$rating) <i class="fa fa-star"></i>
+                                                    @else
+                                                    <i class="fa fa-star-o"></i>
+                                                    @endif
+                                                    @endfor
+                                            </div>
+                                            <div class="product-btns">
+                                                <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                                <button class="add-to-compare" onclick="addToCompare({{ $product->id }})"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                                                <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+                                            </div>
 
-                <!-- ✅ ВСТАВЛЯЕМ МОДАЛКУ -->
-                {{-- <quick-view-modal ref="quickModal"></quick-view-modal> --}}
+
+                                        </div>
+                                        <div class="add-to-cart">
+                                            <button class="add-to-cart-btn" onclick="addToCart({{ $product->id }})">
+                                                <i class="fa fa-shopping-cart"></i> add to cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /product -->
+                                    @endforeach
+                                </div>
+                                <!-- Уникальный nav для каждой категории -->
+                                <div id="slick-nav-{{ $category->id }}" class="products-slick-nav"></div>
+                            </div>
+                            @endforeach
+                            <!-- /tab -->
+                        </div>
+                    </div>
+
+                    <!-- ✅ ВСТАВЛЯЕМ МОДАЛКУ -->
+                    {{-- <quick-view-modal ref="quickModal"></quick-view-modal> --}}
+
+                </div>
+                <!-- ✅ КОНЕЦ обёртки Vue -->
+                <!-- Products tab & slick -->
 
             </div>
-            <!-- /Products tab & slick -->
+            <!-- /row -->
+
         </div>
-        <!-- /row -->
+        <!-- /container -->
+
     </div>
-    <!-- /container -->
+    <!-- /SECTION  2-->
+
+    <!-- HOT DEAL SECTION -->
+    <div id="hot-deal" class="section" style="background-image: url('{{ asset('storage/img/hotdeal.png') }}'); background-position: center; background-repeat: no-repeat; background-size: cover;">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="hot-deal">
+                        <ul class="hot-deal-countdown" id="hot-deal-timer">
+                            <li>
+                                <div>
+                                    <h3 id="days">00</h3>
+                                    <span>Days</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <h3 id="hours">00</h3>
+                                    <span>Hours</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <h3 id="minutes">00</h3>
+                                    <span>Mins</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <h3 id="seconds">00</h3>
+                                    <span>Secs</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <h2 class="text-uppercase">Hot Deal This Week</h2>
+                        <p>New Collection Up to 50% OFF</p>
+                        <a class="primary-btn cta-btn" href=" {{ route('menus.page.show', ['slug' => 'hot-deals', 'page_slug' => 'hot-deals']) }} ">Shop now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /HOT DEAL SECTION -->
+
+    <!-- SECTION 3 -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+
+                <!-- section title -->
+                <div class="col-md-12">
+                    <div class="section-title">
+                        <h3 class="title">Top Selling</h3>
+                        <div class="section-nav">
+                            <ul class="section-tab-nav tab-nav">
+                                @foreach($categories as $category)
+                                <li class="{{ $loop->first ? 'active' : '' }}">
+                                    <a href="#tab-top-{{ $category->id }}" data-toggle="tab">{{ $category->name }}</a>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /section title -->
+
+                <!-- Products tab & slick -->
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="products-tabs">
+                            <!-- Вкладки для каждой категории -->
+                            @foreach($categories as $category)
+                            <div id="tab-top-{{ $category->id }}" class="tab-pane {{ $loop->first ? 'active' : '' }}">
+                                <div class="products-slick" data-nav="#slick-nav-top-{{ $category->id }}">
+                                    {{-- @foreach($products->where('category_id', $category->id)->where('is_top_selling', 1) as $product) --}}
+                                    {{-- @foreach($productsByCategory[$category->name]->where('is_top_selling', 1) ?? [] as $product) --}}
+                                    {{-- @foreach($productsByCategory[$category->name] ?? []->where('is_top_selling', 1) as $product) --}}
+                                    {{-- @foreach(collect($productsByCategory[$category->name] ?? [])->where('is_top_selling', 1) as $product) --}}
+                                    @foreach($topSellingProducts->where('category_id', $category->id) as $product)
+                                    <!-- product -->
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <img src="{{ asset('storage/img/' . $product['images'][0]) }}" alt="{{ $product['name'] }}">
+                                            <div class="product-label">
+                                                @if($product->discount_percentage)
+                                                <span class="sale">-{{ round($product->discount_percentage) }}%</span>
+                                                @endif
+                                                @if($product->is_new)
+                                                <span class="new">NEW</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="product-body">
+                                            <p class="product-category">{{ $product->category->name }}</p>
+                                            <h3 class="product-name"><a href="{{ url('/product/' . $product->id) }}">{{ $product->name }}</a></h3>
+                                            <h4 class="product-price">${{ $product->price }}
+                                                @if($product->old_price)
+                                                <del class="product-old-price">${{ $product->old_price }}</del>
+                                                @endif
+                                            </h4>
+                                            <div class="product-rating">
+                                                @php $rating = round($product->rating); @endphp
+                                                @for ($i = 1; $i <= 5; $i++) @if ($i <=$rating) <i class="fa fa-star"></i>
+                                                    @else
+                                                    <i class="fa fa-star-o"></i>
+                                                    @endif
+                                                    @endfor
+                                            </div>
+                                            <div class="product-btns">
+                                                <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                                <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                                                {{-- <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button> --}}
+                                                <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+                                            </div>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            {{-- <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button> --}}
+                                            <button class="add-to-cart-btn" onclick="addToCart({{ $product->id }})">
+                                                <i class="fa fa-shopping-cart"></i> add to cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /product -->
+                                    @endforeach
+                                </div>
+                                <!-- Уникальный навигатор для каждой категории -->
+                                <div id="slick-nav-top-{{ $category->id }}" class="products-slick-nav"></div>
+                            </div>
+                            @endforeach
+                            <!-- /tab -->
+                        </div>
+                    </div>
+
+                    <!-- ✅ ВСТАВЛЯЕМ МОДАЛКУ -->
+                    <quick-view-modal ref="quickModal"></quick-view-modal>
+
+                </div>
+                <!-- /Products tab & slick -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION 3 -->
 </div>
-<!-- /SECTION 3 -->
 
 <!-- SECTION 4 -->
 <div class="container">

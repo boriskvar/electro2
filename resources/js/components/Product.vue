@@ -95,7 +95,7 @@
 
                 <div class="modal-footer">
                     <!-- Кнопка закрытия внизу -->
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
                 </div>
 
             </div>

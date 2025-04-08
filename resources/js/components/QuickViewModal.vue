@@ -52,8 +52,17 @@ export default {
             try {
                 // Запрос на API для получения данных товара
                 const response = await axios.get(`/api/products/${productId}/details`);
+
+                // Логируем весь ответ от сервера
+                console.log('✅ Ответ от API:', response.data);
+
+                // Сохраняем данные
                 this.selectedProduct = response.data.product;
                 this.selectedAttributes = response.data.attributes;
+
+                // Логируем то, что мы сохраняем
+                console.log('📦 Товар:', this.selectedProduct);
+                console.log('📋 Атрибуты:', this.selectedAttributes);
 
                 // Открытие модального окна
                 $('#quickViewModal').modal('show');

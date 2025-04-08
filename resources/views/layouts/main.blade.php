@@ -36,11 +36,8 @@
     {{-- @include('web.store')  <!-- Вставляем шаблон магазина --> --}}
 
     <!-- Основной контент -->
-    <main id="app">
+    <main>
         @yield('content')
-
-        {{-- Гарантированно подключаем модалку, доступную во всех секциях --}}
-        <quick-view-modal ref="quickModal"></quick-view-modal>
     </main>
 
     <!-- Footer -->

@@ -6,7 +6,7 @@
     <div class="row">
         <!-- Сайдбар -->
         <div class="col-md-3">
-            <div class="sidebar" {{-- style="border: 1px solid red; "  --}}{{-- style="width: 150px;" --}}>
+            <div class="sidebar" style="border: 1px solid #D10024; " {{-- style="width: 150px;" --}}>
 
                 <a href="{{ route('my-account') }}" class="my-sidebar-item {{ $activePage === 'dashboard' ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('wishlist.index') }}" class="my-sidebar-item {{ $activePage === 'wishlist' ? 'active' : '' }}">My Wishlist</a>
