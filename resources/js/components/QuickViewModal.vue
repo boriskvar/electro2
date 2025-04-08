@@ -14,19 +14,22 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body" v-if="selectedProduct && selectedAttributes">
                     <!-- Изображение товара с корректным путём -->
                     <img :src="getImageUrl(selectedProduct.images[0])" class="img-fluid mb-3" alt="Product Image"
                          style="max-width: 80px;">
                     <p><strong>Цена:</strong> {{ selectedProduct.price }}</p>
+
                     <!-- Атрибуты товара -->
                     <div v-for="(value, key) in selectedAttributes" :key="key">
                         <p><strong>{{ key }}:</strong> {{ value }}</p>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <!-- Кнопка для закрытия модалки -->
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
@@ -44,6 +47,8 @@ export default {
     methods: {
         // Метод для загрузки данных о товаре по ID
         async quickView(productId) {
+            console.log('Запрос на товар ID:', productId);
+
             try {
                 // Запрос на API для получения данных товара
                 const response = await axios.get(`/api/products/${productId}/details`);
