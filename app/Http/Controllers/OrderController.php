@@ -15,6 +15,18 @@ class OrderController extends Controller
             return redirect()->route('home')->with('error', 'Заказ не найден');
         }
 
-        return view('user.orders.success', compact('order'));
+        // return view('user.orders.success', compact('order'));
+        return redirect()->route('home')->with('success', 'Заказ оформлен успешно.');
+
+
+        /* return view('user.orders.success', [
+    'order' => $order,
+    'message' => 'Ваш заказ успешно оформлен!'
+]); 
+*/
+
+        /* return redirect()
+            ->route('home')
+            ->with('success', 'Заказ №' . $order->id . ' успешно оформлен!');*/
     }
 }

@@ -53,6 +53,7 @@ class CheckoutController extends Controller
         // Получаем стоимость доставки
         $shippingMethod = $request->input('shipping_method');
         $shippingCost = config("shipping.methods.$shippingMethod.cost");
+        // dd($shippingCost); //100
 
         // Рассчитываем общую сумму заказа
         $cartItems = Cart::where('user_id', Auth::id())->get();

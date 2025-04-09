@@ -4,7 +4,7 @@ return [
     'methods' => [
         'courier' => [
             'name' => 'Курьер',
-            'cost' => 100,
+            'cost' => 15,
         ],
         'pickup' => [
             'name' => 'Самовывоз',
@@ -12,7 +12,7 @@ return [
         ],
         'post' => [
             'name' => 'Почта',
-            'cost' => 70,
+            'cost' => 10,
         ],
     ],
 ];
