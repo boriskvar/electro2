@@ -12,12 +12,12 @@
                 <a href="{{ route('wishlist.index') }}" class="my-sidebar-item {{ $activePage === 'wishlist' ? 'active' : '' }}">My Wishlist</a>
                 <a href="{{ route('compare.index') }}" class="my-sidebar-item {{ $activePage === 'compare' ? 'active' : '' }}">Compare list</a>
                 <a href="{{ route('cart.index') }}" class="my-sidebar-item {{ $activePage === 'cart' ? 'active' : '' }}">My Cart</a>
-
                 <a href="{{ route('checkout.index') }}" class="my-sidebar-item {{ $activePage === 'checkout' ? 'active' : '' }}"> My Checkout</a>
 
-                <a href="{{ route('orders.index') }}" class="my-sidebar-item {{ $activePage === 'orders' ? 'active' : '' }}"> My Orders</a>
-                <a href="{{ route('products.index') }}" class="my-sidebar-item {{ $activePage === 'products' ? 'active' : '' }}">Viewed products</a>
-                <a href="{{ route('reviews.index') }}" class="my-sidebar-item {{ $activePage === 'reviews' ? 'active' : '' }}">My Reviews</a>
+                {{-- <a href="{{ route('orders.index') }}" class="my-sidebar-item {{ $activePage === 'orders' ? 'active' : '' }}"> My Orders</a> --}}
+
+                {{-- <a href="{{ route('products.index') }}" class="my-sidebar-item {{ $activePage === 'products' ? 'active' : '' }}">Viewed products</a> --}}
+                {{-- <a href="{{ route('reviews.index') }}" class="my-sidebar-item {{ $activePage === 'reviews' ? 'active' : '' }}">My Reviews</a> --}}
 
             </div>
         </div>
@@ -46,17 +46,17 @@
                     {{-- <p>Оформление заказа.</p> --}}
                     @include('user.checkout.index')
 
-                    @elseif ($activePage === 'orders')
+                    {{-- @elseif ($activePage === 'orders')
                     <h3>My Orders</h3>
-                    <p>История заказов.</p>
+                    <p>История заказов.</p> --}}
 
-                    @elseif ($activePage === 'products')
+                    {{-- @elseif ($activePage === 'products')
                     <h3>Viewed products</h3>
-                    <p>Просмотренные товары.</p>
+                    <p>Просмотренные товары.</p> --}}
 
-                    @elseif ($activePage === 'reviews')
+                    {{-- @elseif ($activePage === 'reviews')
                     <h3>My reviews</h3>
-                    <p>Мои отзывы о товарах.</p>
+                    <p>Мои отзывы о товарах.</p> --}}
 
                     @endif
                 </div>

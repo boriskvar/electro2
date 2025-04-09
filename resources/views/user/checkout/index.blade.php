@@ -37,7 +37,8 @@
                         <div class="form-group">
                             <input class="input" type="tel" name="tel" placeholder="Telephone">
                         </div>
-                        <div class="form-group">
+
+                        {{-- <div class="form-group">
                             <div class="input-checkbox">
                                 <input type="checkbox" id="create-account" name="create_account">
                                 <label for="create-account">
@@ -46,13 +47,11 @@
                                 </label>
                                 <div class="caption">
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
-                                    {{-- <input class="input"
-                         type="password"
-                         name="password"
-                         placeholder="Enter Your Password"> --}}
+                                    <input class="input" type="password" name="password" placeholder="Enter Your Password">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
+
                 </div>
                 <!-- /Billing Details -->
 
