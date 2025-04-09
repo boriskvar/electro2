@@ -42,8 +42,8 @@
                     @include('user.compare.index')
 
                     @elseif ($activePage === 'checkout')
-                    <h3>My Checkout</h3>
-                    <p>Оформление заказа.</p>
+                    {{-- <h3>My Checkout</h3> --}}
+                    {{-- <p>Оформление заказа.</p> --}}
                     @include('user.checkout.index')
 
                     @elseif ($activePage === 'orders')

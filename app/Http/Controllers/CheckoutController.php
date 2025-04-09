@@ -27,7 +27,16 @@ class CheckoutController extends Controller
         // Рассчитываем общую сумму с учетом доставки
         $totalWithShipping = $total + $shippingCost;
 
-        return view('web.checkout', compact('cartItems', 'total', 'shippingMethods', 'shippingCost', 'totalWithShipping', 'selectedShippingMethod'));
+        // return view('web.checkout', compact('cartItems', 'total', 'shippingMethods', 'shippingCost', 'totalWithShipping', 'selectedShippingMethod'));
+        return view('user.my-account', [
+            'cartItems' => $cartItems,
+            'total' => $total,
+            'shippingMethods' => $shippingMethods,
+            'shippingCost' => $shippingCost,
+            'totalWithShipping' => $totalWithShipping,
+            'selectedShippingMethod' => $selectedShippingMethod,
+            'activePage' => 'checkout',
+        ]);
     }
 
     public function placeOrder(Request $request)
