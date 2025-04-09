@@ -13,6 +13,8 @@
                 <a href="{{ route('compare.index') }}" class="my-sidebar-item {{ $activePage === 'compare' ? 'active' : '' }}">Compare list</a>
                 <a href="{{ route('cart.index') }}" class="my-sidebar-item {{ $activePage === 'cart' ? 'active' : '' }}">My Cart</a>
 
+                <a href="{{ route('checkout.index') }}" class="my-sidebar-item {{ $activePage === 'checkout' ? 'active' : '' }}"> My Checkout</a>
+
                 <a href="{{ route('orders.index') }}" class="my-sidebar-item {{ $activePage === 'orders' ? 'active' : '' }}"> My Orders</a>
                 <a href="{{ route('products.index') }}" class="my-sidebar-item {{ $activePage === 'products' ? 'active' : '' }}">Viewed products</a>
                 <a href="{{ route('reviews.index') }}" class="my-sidebar-item {{ $activePage === 'reviews' ? 'active' : '' }}">My Reviews</a>
@@ -35,30 +37,32 @@
                     <h3>My Cart</h3>
                     <p>Список товаров, добавленных в корзину.</p>
                     @include('user.cart.index')
-                    {{-- <div id="cart-products" data-products="{{ json_encode($products) }}">
-                    <cart :cart-items="products"></cart>
-                </div> --}}
 
-                @elseif ($activePage === 'orders')
-                <h3>My Orders</h3>
-                <p>История заказов.</p>
+                    @elseif ($activePage === 'compare')
+                    @include('user.compare.index')
 
-                @elseif ($activePage === 'compare')
-                @include('user.compare.index')
+                    @elseif ($activePage === 'checkout')
+                    <h3>My Checkout</h3>
+                    <p>Оформление заказа.</p>
+                    @include('user.checkout.index')
 
-                @elseif ($activePage === 'products')
-                <h3>Viewed products</h3>
-                <p>Просмотренные товары.</p>
+                    @elseif ($activePage === 'orders')
+                    <h3>My Orders</h3>
+                    <p>История заказов.</p>
 
-                @elseif ($activePage === 'reviews')
-                <h3>My reviews</h3>
-                <p>Мои отзывы о товарах.</p>
+                    @elseif ($activePage === 'products')
+                    <h3>Viewed products</h3>
+                    <p>Просмотренные товары.</p>
 
-                @endif
+                    @elseif ($activePage === 'reviews')
+                    <h3>My reviews</h3>
+                    <p>Мои отзывы о товарах.</p>
+
+                    @endif
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <style>

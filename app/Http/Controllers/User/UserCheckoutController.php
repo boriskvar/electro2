@@ -13,9 +13,9 @@ class UserCheckoutController extends Controller
     // Показать страницу оформления заказа
     public function index()
     {
-        //$userId = Auth::id(); // Получаем ID текущего пользователя
+        $userId = Auth::id(); // Получаем ID текущего пользователя
         // Временно используем временный ID пользователя для тестирования
-        $userId = 1; // Замените на Auth::id() для продакшн-версии
+        // $userId = 1; // Замените на Auth::id() для продакшн-версии
 
         $cartItems = Cart::where('user_id', $userId)->get(); // Получаем товары в корзине
 
@@ -27,7 +27,7 @@ class UserCheckoutController extends Controller
         // Можно также посчитать общую сумму
         $totalAmount = $cartItems->sum('total');
 
-        return view('checkout.index', compact('cartItems', 'totalAmount'));
+        return view('user.checkout.index', compact('cartItems', 'totalAmount'));
     }
 
     // Обработать оформление заказа

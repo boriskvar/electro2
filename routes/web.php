@@ -17,9 +17,10 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\QuickViewController;
 use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\NewsletterController;
-
 use App\Http\Controllers\User\MyAccountController;
+
 use App\Http\Controllers\User\UserOrderController;
+use App\Http\Controllers\User\UserCheckoutController;
 use App\Http\Controllers\User\UserWishlistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -41,27 +42,58 @@ Route::group([], function () {
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('products.show');
     // Подписка на новости
     Route::post('/subscribe', [NewsletterController::class, 'subscribe'])->name('subscribe');
-
-    // Корзина
-    Route::prefix('/cart')->group(function () {
-        Route::get('/', [CartController::class, 'index'])->name('user.cart.index'); // Показать корзину
-        Route::post('/add', [CartController::class, 'add'])->name('user.cart.add'); // Добавить товар в корзину
-        Route::delete('/remove/{productId}', [CartController::class, 'remove'])->name('user.cart.remove'); // Удалить товар из корзины
-        Route::get('/data', [CartController::class, 'getCartData'])->name('cart.data');
-
-        Route::middleware('auth')->group(function () {
-            Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index'); // Показать страницу оформления заказа
-            Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder'); // Оформить заказ
-        });
-
-        Route::get('/order/success/{order}', [OrderController::class, 'success'])->name('order.success');
-    });
 });
 
-// Маршруты Breeze (Личный кабинет и авторизация)
+// Корзина — доступна всем (в том числе неавторизованным)
+Route::prefix('/cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('user.cart.index'); // Показать корзину
+    Route::post('/add', [CartController::class, 'add'])->name('user.cart.add'); // Добавить товар в корзину
+    Route::delete('/remove/{productId}', [CartController::class, 'remove'])->name('user.cart.remove'); // Удалить товар из корзины
+    Route::get('/data', [CartController::class, 'getCartData'])->name('cart.data');
+
+    // Route::middleware('auth')->group(function () {
+    //     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index'); // Показать страницу оформления заказа
+    //     Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder'); // Оформить заказ
+    // });
+
+    // Route::get('/order/success/{order}', [OrderController::class, 'success'])->name('order.success');
+});
+
+// 👤"My Account" - личный кабинет и оформление заказа
+Route::middleware('auth')->prefix('/my-account')->group(function () {
+    Route::get('/', [MyAccountController::class, 'index'])->name('my-account');
+
+    // Wishlist
+    Route::get('/wishlist', [MyAccountController::class, 'wishlist'])->name('wishlist.index');
+    Route::post('/wishlist/store', [MyAccountController::class, 'storeWishlist'])->name('wishlist.store');
+    Route::delete('/wishlist/{id}', [MyAccountController::class, 'removeFromWishlist'])->name('wishlist.remove');
+
+    // Cart (дублирование не нужно, если не выводится в личном кабинете отдельно)
+    Route::get('/cart', [MyAccountController::class, 'cart'])->name('cart.index');
+
+    // Сравнение товаров 
+    Route::get('/compare', [MyAccountController::class, 'compare'])->name('compare.index');
+    Route::post('/compare/add', [MyAccountController::class, 'addToCompare'])->name('compare.add');
+    Route::post('/compare/remove', [MyAccountController::class, 'removeFromCompare'])->name('compare.remove');
+    Route::delete('/compare/clear', [MyAccountController::class, 'clearCompare'])->name('compare.clear');
+
+    // История заказов, товары, отзывы
+    Route::get('/orders', [MyAccountController::class, 'orders'])->name('orders.index');
+    Route::get('/products', [MyAccountController::class, 'products'])->name('products.index');
+    Route::get('/reviews', [MyAccountController::class, 'reviews'])->name('reviews.index');
+
+    // 🧾 Оформление заказа
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
+
+    // ✅ Страница успешного заказа
+    Route::get('/order/success/{order}', [OrderController::class, 'success'])->name('order.success');
+});
+
+// ⚙️ Профиль (Breeze)
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard'); // Можно заменить на My Account
+        return view('dashboard'); // Можно заменить на редирект в my-account
     })->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -69,29 +101,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// "My Account" - личный кабинет пользователя
-Route::middleware('auth')->group(function () {
-    Route::get('/my-account', [MyAccountController::class, 'index'])->name('my-account');
-
-    Route::get('/my-account/wishlist', [MyAccountController::class, 'wishlist'])->name('wishlist.index');
-    Route::post('/my-account/wishlist/store', [MyAccountController::class, 'storeWishlist'])->name('wishlist.store');
-
-    Route::delete('/my-account/wishlist/{id}', [MyAccountController::class, 'removeFromWishlist'])->name('wishlist.remove');
-
-
-    Route::get('/my-account/cart', [MyAccountController::class, 'cart'])->name('cart.index');
-    Route::get('/my-account/orders', [MyAccountController::class, 'orders'])->name('orders.index');
-
-    // Сравнение товаров (доступно только авторизованным)
-    Route::get('/my-account/compare', [MyAccountController::class, 'compare'])->name('compare.index');
-    Route::post('/my-account/compare/add', [MyAccountController::class, 'addToCompare'])->name('compare.add');
-    Route::post('/my-account/compare/remove', [MyAccountController::class, 'removeFromCompare'])->name('compare.remove');
-    Route::delete('/my-account/compare/clear', [MyAccountController::class, 'clearCompare'])->name('compare.clear');
-
-    Route::get('/my-account/products', [MyAccountController::class, 'products'])->name('products.index');
-    Route::get('/my-account/reviews', [MyAccountController::class, 'reviews'])->name('reviews.index');
-});
-
-
 // Подключение маршрутов аутентификации Breeze
+// 🔐 Auth routes (Breeze)
 require __DIR__ . '/auth.php';
