@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://unpkg.com/vue-toastification@2.0.0-beta.1/dist/index.css">
 
     <!-- Подключение стилей для jQuery UI -->
-    {{-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> --}}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 
     <!-- CSRF Token -->
