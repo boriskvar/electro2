@@ -23,6 +23,10 @@
     <!-- Подключение стилей для Vue Toastification -->
     <link rel="stylesheet" href="https://unpkg.com/vue-toastification@2.0.0-beta.1/dist/index.css">
 
+    <!-- Подключение стилей для jQuery UI -->
+    {{-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> --}}
+
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -57,6 +61,10 @@
     <script src="{{ asset('js/nouislider.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+
+    <!-- Подключение jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 </body>
 
 </html>
