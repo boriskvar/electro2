@@ -79,7 +79,8 @@ class MenuController extends Controller
         $homeMenu = Menu::where('is_home', true)->first();
         $menu = Menu::where('slug', $slug)->first();
         $category = Category::where('slug', $categorySlug)->first();
-        $categories = Category::all();
+        // $categories = Category::all();
+        $categories = Category::withCount('products')->get();
         $brands = Brand::withCount('products')->whereHas('products')->get();
         // dd($brands->toArray());
         // dd($categories);
@@ -145,7 +146,8 @@ class MenuController extends Controller
         $homeMenu = Menu::where('is_home', true)->first();
         $menu = Menu::where('slug', $slug)->firstOrFail();
         $page = Page::where('slug', $page_slug)->firstOrFail();
-        $categories = Category::all();
+        // $categories = Category::all();
+        $categories = Category::withCount('products')->get();
         $brands = Brand::withCount('products')->whereHas('products')->get();
         // dd($brands->toArray());
 

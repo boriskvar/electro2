@@ -87,7 +87,7 @@
                         Apply
                     </button>
                     <!-- Кнопка для сброса фильтров -->
-                    <button id="reset-filters" class="btn btn-primary">reset</button>
+                    <button id="reset-filters" class="btn btn-sm btn-info">reset price</button>
 
                 </form>
 
