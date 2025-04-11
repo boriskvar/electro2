@@ -86,6 +86,8 @@
                     <button type="submit" class="btn btn-danger" style="background-color: #D10024; border-color: #D10024;">
                         Apply
                     </button>
+                    <!-- Кнопка для сброса фильтров -->
+                    <button id="reset-filters" class="btn btn-primary">reset</button>
 
                 </form>
 
@@ -209,59 +211,65 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Получаем минимальное и максимальное значение из запросов или значений по умолчанию
-        let minPrice = parseFloat("{{ request('min_price', $minPrice ?? 0) }}");
-        let maxPrice = parseFloat("{{ request('max_price', $maxPrice ?? 2000) }}");
+        // Исходные значения (по умолчанию)
+        const defaultMinPrice = 0;
+        const defaultMaxPrice = 2000;
+
+        // Получаем параметры из URL
+        let urlParams = new URLSearchParams(window.location.search);
+        let minPrice = parseFloat(urlParams.get('min_price') || defaultMinPrice);
+        let maxPrice = parseFloat(urlParams.get('max_price') || defaultMaxPrice);
 
         // Устанавливаем значения в инпуты
         document.getElementById("price-min").value = minPrice;
         document.getElementById("price-max").value = maxPrice;
 
-        // Инициализация ползунка
+        // Инициализация jQuery UI Slider
         if ($("#price-slider").length) {
             $("#price-slider").slider({
                 range: true
                 , min: 0
-                , max: 2000, // Максимальная цена для ползунка
-                values: [minPrice, maxPrice], // Устанавливаем начальные значения ползунка
+                , max: 2000
+                , values: [minPrice, maxPrice], // Обновляем с текущими значениями
                 slide: function(event, ui) {
-                    // Обновляем оба инпута при движении ползунка
-                    $("#price-min").val(ui.values[0]);
-                    $("#price-max").val(ui.values[1]);
-                }
-                , stop: function(event, ui) {
-                    // Обновляем инпуты после завершения движения ползунка
                     $("#price-min").val(ui.values[0]);
                     $("#price-max").val(ui.values[1]);
                 }
             });
-
-            // После инициализации ползунка обновляем инпуты, чтобы они синхронизировались с ползунком
-            $("#price-slider").slider("values", [minPrice, maxPrice]);
         }
 
-        // Синхронизируем ползунок с инпутами после изменения значений вручную
-        $("#price-min, #price-max").on("change", function() {
-            let minVal = parseFloat($("#price-min").val());
-            let maxVal = parseFloat($("#price-max").val());
+        // Функция для сброса фильтров
+        function resetFilters() {
+            // Устанавливаем дефолтные значения для ползунков
+            const defaultMinPrice = 0;
+            const defaultMaxPrice = 2000;
 
-            // Проверяем, что минимальное значение меньше максимального
-            if (minVal < maxVal) {
-                // Обновляем ползунок с новыми значениями
-                $("#price-slider").slider("values", [minVal, maxVal]);
-            }
-        });
+            // Устанавливаем значения в инпуты
+            document.getElementById("price-min").value = defaultMinPrice;
+            document.getElementById("price-max").value = defaultMaxPrice;
 
-        // Принудительное обновление ползунка, если страница была отфильтрована и перезагружена
-        $(window).on("load", function() {
-            let minVal = parseFloat($("#price-min").val());
-            let maxVal = parseFloat($("#price-max").val());
+            // Инициализируем слайдер
+            $("#price-slider").slider("values", [defaultMinPrice, defaultMaxPrice]);
 
-            // Обновляем ползунок, если значения инпутов были изменены
-            if (minVal < maxVal) {
-                $("#price-slider").slider("values", [minVal, maxVal]);
-            }
-        });
+            // Обновляем URL (чтобы сбросить параметры фильтрации)
+            let newUrl = new URL(window.location.href);
+            newUrl.searchParams.delete('min_price');
+            newUrl.searchParams.delete('max_price');
+            window.history.pushState({}, document.title, newUrl);
+        }
+
+        // Если параметры min_price и max_price отсутствуют в URL, сбрасываем их в адресной строке
+        if (!urlParams.has('min_price') && !urlParams.has('max_price')) {
+            resetFilters();
+        }
+
+        // Обработчик события клика по кнопке сброса
+        const resetButton = document.getElementById("reset-filters");
+        if (resetButton) {
+            resetButton.addEventListener('click', function() {
+                resetFilters();
+            });
+        }
     });
 </script>
 
