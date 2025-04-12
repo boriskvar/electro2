@@ -68,7 +68,7 @@
 
                         {{-- <span class="product-available">In Stock</span> --}}
                         <span class="product-available">
-                            {{ $product->in_stock ? 'In Stock' : 'Out of Stock' }}
+                            {{ $product->in_stock ? 'есть в наличии' : 'Out of Stock' }}
                         </span>
                     </div>
 
@@ -116,8 +116,10 @@
 
                     <!-- Дополнительные кнопки -->
                     <ul class="product-btns">
-                        <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
-                        <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>
+                        {{-- <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li> --}}
+                        <li><a href="#" class="add-to-wishlist" data-id="{{ $product->id }}"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
+                        {{-- <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li> --}}
+                        <li><a href="#" class="add-to-compare" data-id="{{ $product->id }}"><i class="fa fa-exchange"></i> add to compare</a></li>
                     </ul>
 
                     <!-- Категории -->
@@ -376,6 +378,39 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // === Функция добавления в wishlist ===
+        document.querySelectorAll('.add-to-wishlist').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const productId = this.dataset.id;
+
+                fetch('/my-account/wishlist/store', {
+                        method: 'POST'
+                        , headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            , 'Content-Type': 'application/json'
+                            , 'Accept': 'application/json'
+                        }
+                        , body: JSON.stringify({
+                            product_id: productId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message); // или показать иконку, или изменить стиль
+                        } else {
+                            alert('Ошибка: ' + (data.message || 'Не удалось добавить в Wishlist'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при добавлении в wishlist:', error);
+                        alert('Произошла ошибка');
+                    });
+            });
+        });
+
         // === Функция добавления в корзину ===
         window.addToCart = function(productId) {
             console.log("Добавление в корзину:", productId);

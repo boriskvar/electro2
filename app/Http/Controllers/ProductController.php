@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     // Вывод списка продуктов
-    public function index(Request $request)
+    /*  public function index(Request $request)
     {
         // Определяем допустимые поля для сортировки
         $allowedSortFields = ['popular', 'position', 'created_at', 'name']; // Добавьте другие поля по необходимости
@@ -52,16 +52,16 @@ class ProductController extends Controller
             ->paginate($perPage, ['*'], 'page', $page);
 
         // Доступ к количеству отзывов для каждого продукта
-        /* foreach ($products as $product) {
+         foreach ($products as $product) {
             dd($product->reviews_count); // Здесь вы получите количество отзывов для каждого продукта
-        } */
+        } 
         $categories = Category::all();
         $brands = Brand::all();
 
         // Возвращаем представление с переданными данными
         return view('web.products.index', compact('categories', 'brands',  'products'));
     }
-
+ */
 
     /* public function addToCart(Product $product, Request $request)
     {
@@ -130,7 +130,7 @@ class ProductController extends Controller
 
 
 
-    public function search(Request $request)
+    /*  public function search(Request $request)
     {
         //dd($request->toArray()); // []
         $query = $request->input('query');
@@ -144,5 +144,5 @@ class ProductController extends Controller
         $products = Product::where('name', 'LIKE', '%' . $query . '%')->get();
         //dd($products->toArray()); // [ 0 => array:23 [▶]  1 => array:23 [▶] ]
         return view('web.products.search', compact('products', 'query'));
-    }
+    } */
 }
