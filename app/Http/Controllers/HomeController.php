@@ -31,13 +31,13 @@ class HomeController extends Controller
         // Новые товары
         $newProducts = Product::where('is_new', 1)
             ->latest()
-            ->take(10)
+            ->take(100)
             ->get();
 
         // Топ-продажи
         $topSellingProducts = Product::where('is_top_selling', 1)
             ->latest()
-            ->take(10)
+            ->take(100)
             ->get();
 
         // Горящие скидки (Hot Deals)
