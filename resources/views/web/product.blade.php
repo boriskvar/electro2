@@ -127,8 +127,19 @@
                         <li>Category:</li>
                         {{-- <li><a href="#">Headphones</a></li> --}}
                         {{-- <li><a href="#">Accessories</a></li> --}}
-                        @if ($product->category)
-                        <li><a href="#">{{ $product->category->name }}</a></li>
+                        {{-- <pre>{{ dd($product->category) }}</pre> --}}
+                        {{-- <pre>{{ dd($product->category->menu) }}</pre> --}}
+                        @if ($product->category && $product->category->menus->first())
+                        @php $menu = $product->category->menus->first(); @endphp
+                        <li>
+                            {{-- <a href="https://electro2.local/menus/laptops/category/laptops">{{ $product->category->name }}</a> --}}
+                            <a href="{{ route('menus.category.show', [
+                                'slug' => $menu->slug, 
+                                'category_slug' => $product->category->slug
+                                ]) }}">
+                                {{ $product->category->name }}
+                            </a>
+                        </li>
                         @else
                         <li>No category assigned</li>
                         @endif
@@ -291,7 +302,7 @@
 <!-- /SECTION -->
 
 <!-- Section -->
-<div class="section">
+<div id="app" class="section">
     <!-- container -->
     <div class="container">
         <!-- row -->
@@ -346,15 +357,16 @@
                                 @endfor
                         </div>
                         <div class="product-btns">
-                            <button class="add-to-wishlist">
+                            <button class="add-to-wishlist" data-id="{{ $relatedProduct->id }}">
                                 <i class="fa fa-heart-o"></i>
                                 <span class="tooltipp">add to wishlist</span>
                             </button>
-                            <button class="add-to-compare">
+                            <button class="add-to-compare" data-id="{{ $relatedProduct->id }}">
                                 <i class="fa fa-exchange"></i>
                                 <span class="tooltipp">add to compare</span>
                             </button>
-                            <button class="quick-view">
+                            {{-- <button class="quick-view" data-id="{{ $relatedProduct->id }}"> --}}
+                            <button class="quick-view" @click="$refs.quickModal.quickView({{ $relatedProduct->id }})">
                                 <i class="fa fa-eye"></i>
                                 <span class="tooltipp">quick view</span>
                             </button>
@@ -367,10 +379,16 @@
                     </div>
                 </div>
             </div>
+
             @endforeach
         </div>
+
+
     </div>
+    <!-- ✅ ВСТАВЛЯЕМ МОДАЛКУ -->
+    <quick-view-modal ref="quickModal"></quick-view-modal>
 </div>
+
 <!-- /container -->
 </div>
 <!-- /Section -->
@@ -384,6 +402,7 @@
                 e.preventDefault();
 
                 const productId = this.dataset.id;
+                const button = this; // 👈 сохраняем контекст
 
                 fetch('/my-account/wishlist/store', {
                         method: 'POST'
@@ -399,7 +418,11 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert(data.message); // или показать иконку, или изменить стиль
+                            alert(data.message || "Товар добавлен в список желаний!"); // или показать иконку, или изменить стиль
+                            // ✅ Меняем иконку/текст
+                            button.innerHTML = '<i class="fa fa-heart-o"></i> added';
+                            // ✅ Добавляем класс "disabled" — можно применить стиль в CSS
+                            button.classList.add('disabled'); // если хочешь заблокировать повторный клик
                         } else {
                             alert('Ошибка: ' + (data.message || 'Не удалось добавить в Wishlist'));
                         }
@@ -410,6 +433,45 @@
                     });
             });
         });
+
+
+        // === Функция добавления в сравнение ===
+        document.querySelectorAll('.add-to-compare').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const productId = this.dataset.id;
+
+                fetch('/my-account/compare/add', {
+                        method: 'POST'
+                        , headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            , 'Content-Type': 'application/json'
+                            , 'Accept': 'application/json'
+                        }
+                        , body: JSON.stringify({
+                            product_id: productId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message || "Товар добавлен в сравнение!");
+                            // Тут можно изменить стиль кнопки, если хочешь
+                            // Например:
+                            this.innerHTML = '<i class="fa fa-exchange"></i> added';
+                            this.classList.add('disabled'); // если хочешь заблокировать повторный клик
+                        } else {
+                            alert("Ошибка: " + (data.message || "Не удалось добавить в сравнение"));
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Ошибка при добавлении в сравнение:", error);
+                        alert("Произошла ошибка");
+                    });
+            });
+        });
+
 
         // === Функция добавления в корзину ===
         window.addToCart = function(productId) {
