@@ -140,6 +140,9 @@
                         Dashboard
                     </a>
                 </li>
+                <li class="{{ request()->is('admin/social-links*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.social-links.index') }}">social-links</a>
+                </li>
                 <li class="{{ request()->is('admin/wishlists*') ? 'active' : '' }}">
                     <a href="{{ route('admin.wishlists.index') }}">wishlists</a>
                 </li>
@@ -168,11 +171,9 @@
                 <li class="{{ request()->is('admin/comparisons*') ? 'active' : '' }}">
                     <a href="{{ route('admin.comparisons.index') }}">сomparisons_list</a>
                 </li>
-
                 @php
                 $comparison = $comparison ?? null; // Проверяем, есть ли переменная
                 @endphp
-
                 <li class="{{ request()->is('admin/comparisons/*/products*') ? 'active' : '' }}">
                     @if($comparison)
                     <a href="{{ route('admin.comparison_products.index', ['comparison' => $comparison->id]) }}">
@@ -183,7 +184,6 @@
                     @endif
                 </li>
 
-
                 <li class="{{ request()->is('admin/cart*') ? 'active' : '' }}">
                     <a href="{{ route('admin.cart.index') }}">Корзина</a>
                 </li>
@@ -193,9 +193,7 @@
                 <li class="{{ request()->is('admin/order-items*') ? 'active' : '' }}">
                     <a href="{{ route('admin.order-items.redirect') }}">Элемент Заказа</a>
                 </li>
-                {{-- <li class="{{ request()->is('admin/checkout*') ? 'active' : '' }}">
-                <a href="{{ route('admin.checkout.index') }}">Оформить</a>
-                </li> --}}
+
                 <li class="{{ request()->is('admin/reviews*') ? 'active' : '' }}">
                     <a href="{{ route('admin.reviews.index') }}">Отзывы</a>
                 </li>

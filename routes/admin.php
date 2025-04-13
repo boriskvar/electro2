@@ -16,12 +16,13 @@ use App\Http\Controllers\Admin\AdminCheckoutController;
 use App\Http\Controllers\Admin\AdminWishlistController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminOrderItemController;
+use App\Http\Controllers\Admin\AdminComparisonController;
+use App\Http\Controllers\Admin\AdminSocialLinkController;
 use App\Http\Controllers\Admin\SearchAnalyticsController;
 use App\Http\Controllers\Admin\AdminProductAttributeController;
 use App\Http\Controllers\Admin\AdminCategoryAttributeController;
-use App\Http\Controllers\Admin\AdminProductAttributeValueController;
-use App\Http\Controllers\Admin\AdminComparisonController;
 use App\Http\Controllers\Admin\AdminComparisonProductController;
+use App\Http\Controllers\Admin\AdminProductAttributeValueController;
 
 
 //Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -29,6 +30,18 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
+
+    // Маршруты для работы с соцсетями (CRUD)
+    Route::prefix('/social-links')->group(function () {
+        Route::get('/', [AdminSocialLinkController::class, 'index'])->name('admin.social-links.index'); // Список
+        Route::get('/create', [AdminSocialLinkController::class, 'create'])->name('admin.social-links.create'); // Форма создания
+        Route::post('/', [AdminSocialLinkController::class, 'store'])->name('admin.social-links.store'); // Сохранение
+
+        Route::get('/{socialLink}', [AdminSocialLinkController::class, 'show'])->name('admin.social-links.show'); // Просмотр
+        Route::get('/{socialLink}/edit', [AdminSocialLinkController::class, 'edit'])->name('admin.social-links.edit'); // Форма редактирования
+        Route::put('/{socialLink}', [AdminSocialLinkController::class, 'update'])->name('admin.social-links.update'); // Обновление
+        Route::delete('/{socialLink}', [AdminSocialLinkController::class, 'destroy'])->name('admin.social-links.destroy'); // Удаление
+    });
 
 
     // Маршрут для просмотра аналитики по поисковым запросам
