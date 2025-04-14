@@ -6,14 +6,17 @@ use App\Models\Menu;
 use App\Models\Page;
 use App\Models\Category;
 use App\Models\Wishlist;
-use App\View\Composers\CartComposer;
+use App\Models\SocialLink;
 // use Illuminate\Support\Facades\Route; // Добавляем Route
-use Illuminate\Support\Facades\Auth;
+use App\View\Composers\CartComposer;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+
 use App\Http\Controllers\FooterController;
+use App\Providers\ViewComposerServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->register(ViewComposerServiceProvider::class);
     }
 
     /**
@@ -93,6 +96,27 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 $view->with('wishlistCount', $wishlistCount);
+            });
+
+            //Подключить View Composer для всех шаблонов, где есть <x-newsletter /> наличие $footerSocialLinks всегда, когда загружается components.newsletter.
+            // Composer для футера
+            View::composer('components.newsletter', function ($view) {
+                $footerLinks = SocialLink::where('active', true)
+                    ->where('type', 'footer')
+                    ->orderBy('position')
+                    ->get();
+
+                $view->with('footerSocialLinks', $footerLinks);
+            });
+
+            // Composer для product
+            View::composer('components.product-share', function ($view) {
+                $productLinks = SocialLink::where('active', true)
+                    ->where('type', 'product')
+                    ->orderBy('position')
+                    ->get();
+
+                $view->with('productSocialLinks', $productLinks);
             });
         }
     }

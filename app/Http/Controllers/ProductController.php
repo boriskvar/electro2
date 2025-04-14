@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Brand;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\SocialLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -119,12 +120,18 @@ class ProductController extends Controller
         $wishlistCount = Auth::check() ? Auth::user()->wishlist()->count() : 0;
         // dd($wishlistCount);
 
+        $productSocialLinks = SocialLink::where('active', true)
+            ->where('type', 'product') // 👈 важный фильтр
+            ->orderBy('position')
+            ->get();
+
         // Передаем продукт и текущее количество в представление, а также размеры
         return view('web.product', [
             'product' => $product,
             'allImages' => $allImages,  // Добавляем все изображения
             'relatedProducts' => $relatedProducts,
             'wishlistCount' => $wishlistCount,
+            'productSocialLinks' => $productSocialLinks,
         ]);
     }
 

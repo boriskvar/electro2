@@ -35,6 +35,9 @@
             </div>
             <!-- /Product thumb imgs -->
 
+            {{-- Добавь компонент здесь, где тебе нужно вывести иконки --}}
+            {{-- <x-product-share :productSocialLinks="$productSocialLinks" /> --}}
+
             <!-- Product details -->
             <div class="col-md-5">
                 <div class="product-details">
@@ -146,13 +149,26 @@
                     </ul>
 
                     <!-- Поделиться -->
-                    <ul class="product-links">
+                    {{-- <ul class="product-links">
                         <li>Share:</li>
                         <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                         <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                         <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
                         <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+                    </ul> --}}
+                    @if($productSocialLinks ->count())
+                    <ul class="product-links">
+                        <li>Share:</li>
+                        @foreach($productSocialLinks as $link)
+                        <li>
+                            <a href="{{ $link->url }}" @if($link->open_in_new_tab) target="_blank" @endif
+                                title="{{ $link->name }}">
+                                <i class="{{ $link->icon_class }}"></i>
+                            </a>
+                        </li>
+                        @endforeach
                     </ul>
+                    @endif
 
                 </div>
             </div>

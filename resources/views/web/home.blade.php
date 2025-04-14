@@ -421,7 +421,8 @@
 <!-- /SECTION 4 -->
 
 <!-- NEWSLETTER -->
-<x-newsletter />
+<x-newsletter :footerSocialLinks="$footerSocialLinks" />
+{{-- @include('components.newsletter') --}}
 <!-- /NEWSLETTER -->
 
 <script>

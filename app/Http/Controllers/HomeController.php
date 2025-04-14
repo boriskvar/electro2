@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\SocialLink;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
 {
@@ -75,6 +77,11 @@ class HomeController extends Controller
         $wishlistCount = Auth::check() ? Auth::user()->wishlist()->count() : 0;
         // dd($wishlistCount);
 
+        $footerSocialLinks = SocialLink::where('active', true)
+            ->where('type', 'footer')
+            ->orderBy('position')
+            ->get();
+        // dd($footerSocialLinks);
         return view('web.home', compact(
             'categories',
             'saleCategories',
@@ -88,7 +95,8 @@ class HomeController extends Controller
             'hotDeals',
             'menus',
             'categoryHotDealLinks', // Передаем ссылки в шаблон
-            'wishlistCount'
+            'wishlistCount',
+            'footerSocialLinks',
         ));
     }
 
