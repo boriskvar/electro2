@@ -156,9 +156,11 @@
                         <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
                         <li><a href="#"><i class="fa fa-envelope"></i></a></li>
                     </ul> --}}
-                    @if($productSocialLinks ->count())
+                    @if($productSocialLinks->count())
                     <ul class="product-links">
-                        <li>Share:</li>
+                        <li>Поделиться:</li>
+
+                        {{-- Социальные сети из базы --}}
                         @foreach($productSocialLinks as $link)
                         <li>
                             <a href="{{ $link->url }}" @if($link->open_in_new_tab) target="_blank" @endif
@@ -167,6 +169,13 @@
                             </a>
                         </li>
                         @endforeach
+
+                        {{-- Дополнительная кнопка "Отправить другу" --}}
+                        <li>
+                            <a href="mailto:?subject=Посмотри товар {{ $product->name }}&body=Ссылка: {{ url()->current() }}" title="Отправить другу по email">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
                     </ul>
                     @endif
 
