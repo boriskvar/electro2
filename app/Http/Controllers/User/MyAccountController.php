@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Cart;
+use App\Models\Review;
 use App\Models\Product;
 use App\Models\Wishlist;
 use App\Models\Comparison;
@@ -256,6 +257,18 @@ class MyAccountController extends Controller
     // Страница "Reviews"
     public function reviews()
     {
-        return view('user.my-account', ['activePage' => 'reviews']);
+        $user = Auth::user();
+
+        // Получаем все отзывы текущего пользователя, включая мягко удалённые товары
+        /* $reviews = Review::with('product') // Загружаем продукты вместе с отзывами
+            ->where('user_id', $user->id)
+            ->get(); */
+        $reviews = Review::with('product')->latest()->get();
+
+
+        return view('user.my-account', [
+            'activePage' => 'reviews',
+            'reviews' => $reviews,
+        ]);
     }
 }

@@ -38,8 +38,11 @@ Route::group([], function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
     // Для обычных страниц
     Route::get('/page/{slug}', [PageController::class, 'show'])->name('pages.show');
+
     // Детали продукта
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::post('/reviews', [ProductController::class, 'store'])->name('reviews.store');
+
     // Подписка на новости
     Route::post('/subscribe', [NewsletterController::class, 'subscribe'])->name('subscribe');
 });
@@ -80,6 +83,7 @@ Route::middleware('auth')->prefix('/my-account')->group(function () {
     // История заказов, товары, отзывы
     Route::get('/orders', [MyAccountController::class, 'orders'])->name('orders.index');
     Route::get('/products', [MyAccountController::class, 'products'])->name('products.index');
+
     Route::get('/reviews', [MyAccountController::class, 'reviews'])->name('reviews.index');
 
     // 🧾 Оформление заказа

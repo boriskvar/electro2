@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Brand;
+use App\Models\Review;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\SocialLink;
@@ -13,89 +14,34 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // Вывод списка продуктов
-    /*  public function index(Request $request)
-    {
-        // Определяем допустимые поля для сортировки
-        $allowedSortFields = ['popular', 'position', 'created_at', 'name']; // Добавьте другие поля по необходимости
-
-        // Получаем параметры сортировки и пагинации из запроса
-        $sort = $request->input('sort', 'position'); // Поле для сортировки, по умолчанию 'position'
-        $order = $request->input('order', 'asc'); // Порядок сортировки, по умолчанию 'asc'
-        $perPage = $request->input('per_page', 25); // Количество элементов на страницу, по умолчанию 25
-        $page = $request->input('page', 1); // Текущая страница
-
-        // Проверяем, является ли поле сортировки допустимым
-        if (!in_array($sort, $allowedSortFields)) {
-            $sort = 'position'; // По умолчанию сортируем по 'position' если поле недопустимо
-        }
-
-        // $product = Product::withCount('reviews')->find(11); // Замените 1 на актуальный ID продукта
-        // $product->reviews_count = $product->reviews()->count();
-        // $product->save();
-        // dd($product->toArray());
-        // dd($product->reviews_count); // Проверяем количество отзывов
-        // dd($product->reviews); // Проверяем все отзывы, связанные с продуктом
-
-
-
-        // Выполняем запрос к базе данных с учетом отзывов и оценок
-        $products = Product::withCount('reviews') // Подсчитываем количество отзывов
-            ->withAvg('reviews', 'rating') // Вычисляем среднюю оценку
-            ->when($sort === 'popular', function ($query) use ($order) {
-                // Сортировка по популярности (количество отзывов и средняя оценка)
-                return $query->orderBy('reviews_count', $order)
-                    ->orderBy('reviews_avg_rating', $order);
-            }, function ($query) use ($sort, $order) {
-                // Сортировка по другим полям
-                return $query->orderBy($sort, $order);
-            })
-            ->paginate($perPage, ['*'], 'page', $page);
-
-        // Доступ к количеству отзывов для каждого продукта
-         foreach ($products as $product) {
-            dd($product->reviews_count); // Здесь вы получите количество отзывов для каждого продукта
-        } 
-        $categories = Category::all();
-        $brands = Brand::all();
-
-        // Возвращаем представление с переданными данными
-        return view('web.products.index', compact('categories', 'brands',  'products'));
-    }
- */
-
-    /* public function addToCart(Product $product, Request $request)
-    {
-        // $userId = Auth::id();
-        $userId = 1; // Замените на Auth::id() для продакшн-версии
-        $quantity = $request->input('quantity', 1); // Получаем количество из запроса
-    
-        // Получаем текущее количество товара в корзине из сессии
-        $currentQuantity = session()->get("cart.{$userId}.{$product->id}", 0);
-    
-        // Обновляем количество товара в корзине
-        session()->put("cart.{$userId}.{$product->id}", $currentQuantity + $quantity);
-    
-        return redirect()->route('web.products.show', $product->id);
-    } */
-
-
-
     // Показать один продукт
     public function show($id)
     {
         // Попробуем найти продукт по ID, если не найден - вернется 404 ошибка
-        $product = Product::findOrFail($id);
+        // $product = Product::findOrFail($id);
         // $product = Product::with(['reviews', 'details'])->findOrFail($id); // Подгружаем связанные данные
-
+        $product = Product::with(['reviews' => function ($query) {
+            $query->latest();
+        }])->findOrFail($id);
         // dd($product->toArray());
+
+        $reviewsPerPage = 5;
+        $currentPage = request()->get('page', 1);
+        $totalReviews = $product->reviews->count();
+        // dd($totalReviews); //3
+
+        $totalPages = ceil($totalReviews / $reviewsPerPage);
+        $start = ($currentPage - 1) * $reviewsPerPage;
+
+        $paginatedReviews = $product->reviews->slice($start, $reviewsPerPage);
 
         // Получаем все изображения из этого продукта
         $allImages = $product->images; // Это уже массив, если в модели задано кастование для images
 
         // Используем ID текущего пользователя (для продакшн-версии)
         // $userId = auth()->id() ?: 1; // В случае отсутствия пользователя, используем ID 1 для теста
-        $userId = 1;
+        // $userId = 1;
+        $userId = Auth::id();
         // Получаем количество товара в корзине для текущего пользователя из сессии
         $currentQuantity = session()->get("cart.{$userId}.{$product->id}", 0); // Если нет, возвращаем 0
 
@@ -132,9 +78,61 @@ class ProductController extends Controller
             'relatedProducts' => $relatedProducts,
             'wishlistCount' => $wishlistCount,
             'productSocialLinks' => $productSocialLinks,
+            'paginatedReviews' => $paginatedReviews,
+            'totalReviews' => $totalReviews,
+            'totalPages' => $totalPages,
+            'currentPage' => $currentPage
         ]);
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'author_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'review' => 'required|string',
+            'rating' => 'required|integer|min:1|max:5',
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        // Сохраняем отзыв
+        // $review = new Review();
+        // $review->product_id = $request->product_id; // Нужно передать ID продукта
+        // $review->author_name = $request->author_name;
+        // $review->email = $request->email;
+        // $review->review = $request->review;
+        // $review->rating = $request->rating;
+        // $review->save();
+        // dd($review);
+
+        /* Review::create([
+            'product_id' => $request->product_id,
+            'author_name' => $request->author_name,
+            'email' => $request->email,
+            'review' => $request->review,
+            'rating' => $request->rating,
+            'user_id' => Auth::check() ? Auth::id() : null,
+        ]); */
+
+        // $product = Product::with('reviews')->find($request->product_id);
+        // dd($product->reviews->pluck('review'));
+
+        $review = Review::create([
+            'product_id' => $request->product_id,
+            'author_name' => $request->author_name,
+            'email' => $request->email,
+            'review' => $request->review,
+            'rating' => $request->rating,
+            'user_id' => Auth::check() ? Auth::id() : null,
+        ]);
+        // Проверим, связан ли отзыв с товаром
+        // dd($review->product ? $review->product->name : 'нет связи');
+
+        // Увеличиваем счётчик отзывов в продукте
+        Product::where('id', $request->product_id)->increment('reviews_count');
+
+        return redirect()->back()->with('success', 'Отзыв успешно добавлен!');
+    }
 
 
     /*  public function search(Request $request)

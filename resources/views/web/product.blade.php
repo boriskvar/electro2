@@ -56,7 +56,8 @@
                                 @endif
                                 @endfor
                         </div>
-                        <a class="review-link" href="#">{{ $product->reviews_count }} Review(s) | Add your review</a>
+                        {{-- <a class="review-link" href="#tab3">{{ $product->reviews_count }} Review(s) | Add your review</a> --}}
+                        <a class="review-link" href="#tab3">{{ $product->reviews_count }} отзыв (а/ов) | Оставить отзыв</a>
                     </div>
 
                     <div>
@@ -190,7 +191,8 @@
                     <ul class="tab-nav">
                         <li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
                         <li><a data-toggle="tab" href="#tab2">Details</a></li>
-                        <li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+                        {{-- <li><a data-toggle="tab" href="#tab3">Reviews (23)</a></li> --}}
+                        <li><a data-toggle="tab" href="#tab3">Reviews ({{ $totalReviews }})</a></li>
                     </ul>
                     <!-- /product tab nav -->
 
@@ -264,19 +266,23 @@
                                             @foreach ($reviews as $review)
                                             <li>
                                                 <div class="review-heading">
-                                                    <h5 class="name">{{ $review->user->name }}</h5>
+                                                    {{-- <h5 class="name">{{ $review->user->name }}</h5> --}}
+                                                    <h5 class="name">{{ $review->author_name }}</h5><!-- Имя автора -->
                                                     <p class="date">{{ $review->created_at->format('d M Y, H:i') }}</p>
+                                                    {{-- <p class="date">{{ \Carbon\Carbon::parse($review->created_at)->format('d M Y, H:i') }}</p> <!-- Дата отзыва --> --}}
                                                     <div class="review-rating">
                                                         @for ($i = 1; $i <= 5; $i++) <i class="fa fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
                                                             @endfor
                                                     </div>
                                                 </div>
                                                 <div class="review-body">
-                                                    <p>{{ $review->content }}</p>
+                                                    <p>{{ $review->review  }}</p> <!-- Текст отзыва -->
                                                 </div>
                                             </li>
                                             @endforeach
                                         </ul>
+
+                                        <!-- Пагинация -->
                                         <ul class="reviews-pagination">
                                             @for ($i = 1; $i <= $totalPages; $i++) <li class="{{ $currentPage == $i ? 'active' : '' }}">
                                                 <a href="?page={{ $i }}">{{ $i }}</a>
@@ -290,12 +296,17 @@
                                 <!-- Review Form -->
                                 <div class="col-md-3">
                                     <div id="review-form">
-                                        <form class="review-form">
-                                            <input class="input" type="text" placeholder="Your Name">
-                                            <input class="input" type="email" placeholder="Your Email">
-                                            <textarea class="input" placeholder="Your Review"></textarea>
+                                        {{-- <form class="review-form"> --}}
+                                        <form action="{{ route('reviews.store') }}" class="review-form" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                                            {{-- <input class="input" type="text" placeholder="Your Name"> --}}
+                                            <input class="input" type="text" name="author_name" placeholder="Ваше имя" required>
+                                            <input class="input" type="email" name="email" placeholder="Ваша почта" required>
+                                            <textarea class="input" name="review" placeholder="Ваш отзыв" required></textarea>
                                             <div class="input-rating">
-                                                <span>Your Rating: </span>
+                                                <span>Ваш рейтинг: </span>
                                                 <div class="stars">
                                                     <input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
                                                     <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
@@ -304,7 +315,8 @@
                                                     <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
                                                 </div>
                                             </div>
-                                            <button class="primary-btn">Submit</button>
+
+                                            <button class="primary-btn" type="submit">Submit</button>
                                         </form>
                                     </div>
                                 </div>
@@ -537,6 +549,33 @@
                     showToast("Ошибка при добавлении товара", "error");
                 });
         };
+
+        // === Функция чтобы прокручивало к табам ===
+        $(document).ready(function() {
+            $('.review-link').on('click', function(e) {
+                e.preventDefault();
+
+                // Активируем вкладку с отзывами
+                $('a[href="#tab3"]').tab('show');
+
+                // Дождемся, пока вкладка отобразится
+                setTimeout(function() {
+                    var reviewForm = document.getElementById('review-form');
+                    if (reviewForm) {
+                        // Плавная прокрутка к форме
+                        reviewForm.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+
+                        // Ставим фокус на поле "Ваше имя"
+                        var nameInput = reviewForm.querySelector('input[name="author_name"]');
+                        if (nameInput) {
+                            nameInput.focus();
+                        }
+                    }
+                }, 200); // время на активацию вкладки
+            });
+        });
     });
 </script>
 

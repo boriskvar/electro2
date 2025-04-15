@@ -14,10 +14,10 @@
                 <a href="{{ route('cart.index') }}" class="my-sidebar-item {{ $activePage === 'cart' ? 'active' : '' }}">My Cart</a>
                 <a href="{{ route('checkout.index') }}" class="my-sidebar-item {{ $activePage === 'checkout' ? 'active' : '' }}"> My Checkout</a>
 
-                {{-- <a href="{{ route('orders.index') }}" class="my-sidebar-item {{ $activePage === 'orders' ? 'active' : '' }}"> My Orders</a> --}}
+                <a href="{{ route('reviews.index') }}" class="my-sidebar-item {{ $activePage === 'reviews' ? 'active' : '' }}">My Reviews</a>
 
+                {{-- <a href="{{ route('orders.index') }}" class="my-sidebar-item {{ $activePage === 'orders' ? 'active' : '' }}"> My Orders</a> --}}
                 {{-- <a href="{{ route('products.index') }}" class="my-sidebar-item {{ $activePage === 'products' ? 'active' : '' }}">Viewed products</a> --}}
-                {{-- <a href="{{ route('reviews.index') }}" class="my-sidebar-item {{ $activePage === 'reviews' ? 'active' : '' }}">My Reviews</a> --}}
 
             </div>
         </div>
@@ -46,6 +46,68 @@
                     {{-- <p>Оформление заказа.</p> --}}
                     @include('user.checkout.index')
 
+                    @elseif ($activePage === 'reviews')
+                    @foreach ($reviews as $review)
+                    <div class="mb-4 review-item pb-3">
+                        <strong>{{ $review->product->name ?? 'Товар удалён' }}</strong><br>
+
+                        {{-- звёзды --}}
+                        <div class="review">
+                            <div class="rating-stars">
+                                @for ($i = 1; $i <= 5; $i++) <i class="fa fa-star{{ $i <= $review->rating ? ' red-star' : '-o' }}"></i>
+                                    @endfor
+                            </div>
+                            <p>{{ $review->review }}</p>
+                        </div>
+
+                        <small class="text-muted">{{ $review->author_name }} — {{ $review->created_at->format('d.m.Y H:i') }}</small>
+
+                    </div>
+                    @endforeach
+
+                    <style>
+                        /* Кастомизация цвета звезд для рейтинга */
+                        .red-star {
+                            color: red !important;
+                            /* Используем красный цвет для активных звезд */
+                        }
+
+                        /* Дополнительно можно сделать, чтобы неактивные звезды были более тусклыми */
+                        .fa-star-o {
+                            color: #ccc;
+                            /* Цвет для неактивных звезд (серый) */
+                        }
+
+                        /* Подчеркивание (разделитель) под каждым отзывом */
+                        .review-item {
+                            border-bottom: 2px solid #e0e0e0;
+                            /* Подчеркивание светло-серого цвета */
+                            padding-bottom: 15px;
+                            /* Дополнительное пространство снизу для отделения */
+                            margin-bottom: 15px;
+                            /* Пространство между отзывами */
+                        }
+                    </style>
+
+
+                    {{-- @if($reviews->isEmpty())
+                    <p>Вы ещё не оставляли отзывов.</p>
+                    @else
+                    <ul class="list-group">
+                        @foreach ($reviews as $review)
+                        <li class="list-group-item">
+                            <strong>{{ $review->product->title ?? 'Товар удалён' }}</strong><br>
+                    <small>{{ $review->created_at->format('d.m.Y H:i') }}</small><br>
+                    <div>
+                        @for ($i = 1; $i <= 5; $i++) <i class="fa fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
+                            @endfor
+                    </div>
+                    <p>{{ $review->review }}</p>
+                    </li>
+                    @endforeach
+                    </ul>
+                    @endif --}}
+
                     {{-- @elseif ($activePage === 'orders')
                     <h3>My Orders</h3>
                     <p>История заказов.</p> --}}
@@ -53,11 +115,6 @@
                     {{-- @elseif ($activePage === 'products')
                     <h3>Viewed products</h3>
                     <p>Просмотренные товары.</p> --}}
-
-                    {{-- @elseif ($activePage === 'reviews')
-                    <h3>My reviews</h3>
-                    <p>Мои отзывы о товарах.</p> --}}
-
                     @endif
                 </div>
             </div>

@@ -15,13 +15,14 @@ class Review extends Model
         'author_name',
         'email',
         'rating',
-        'review_text'
+        'review'
     ];
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id'); // product_id — внешний ключ в таблице reviews
-        //return $this->belongsTo(Product::class);
+        // Используем withTrashed, чтобы получить удалённые товары
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+        // return $this->belongsTo(Product::class, 'product_id', 'id')->withTrashed();
     }
 
     public function user() // Добавьте это, если у вас есть связь с пользователем
