@@ -118,10 +118,14 @@
                         </button>
                     </div>
 
+                    @if (request()->has('wishlist_product_id'))
+                    <input type="hidden" name="wishlist_product_id" value="{{ request('wishlist_product_id') }}">
+                    @endif
+
                     <!-- Дополнительные кнопки -->
                     <ul class="product-btns">
                         {{-- <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li> --}}
-                        <li><a href="#" class="add-to-wishlist" data-id="{{ $product->id }}"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
+                        <li><a href="#" class="add-to-wishlist" data-id="{{ $product->id }}" data-auth="{{ auth()->check() ? '1' : '0' }}"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
                         {{-- <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li> --}}
                         <li><a href="#" class="add-to-compare" data-id="{{ $product->id }}"><i class="fa fa-exchange"></i> add to compare</a></li>
                     </ul>
@@ -325,7 +329,6 @@
                         </div>
                         <!-- /tab3 -->
 
-
                     </div>
                     <!-- /product tab content  -->
                 </div>
@@ -439,7 +442,7 @@
                 e.preventDefault();
 
                 const productId = this.dataset.id;
-                const button = this; // 👈 сохраняем контекст
+                const button = this;
 
                 fetch('/my-account/wishlist/store', {
                         method: 'POST'
@@ -452,14 +455,22 @@
                             product_id: productId
                         })
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (response.status === 401) {
+                            // Пользователь не авторизован — перенаправляем на регистрацию с параметром
+                            window.location.href = '/register?wishlist_product_id=' + productId;
+                            return;
+                        }
+
+                        return response.json();
+                    })
                     .then(data => {
+                        if (!data) return; // мы уже перенаправили
+
                         if (data.success) {
-                            alert(data.message || "Товар добавлен в список желаний!"); // или показать иконку, или изменить стиль
-                            // ✅ Меняем иконку/текст
+                            alert(data.message || "Товар добавлен в список желаний!");
                             button.innerHTML = '<i class="fa fa-heart-o"></i> added';
-                            // ✅ Добавляем класс "disabled" — можно применить стиль в CSS
-                            button.classList.add('disabled'); // если хочешь заблокировать повторный клик
+                            button.classList.add('disabled');
                         } else {
                             alert('Ошибка: ' + (data.message || 'Не удалось добавить в Wishlist'));
                         }
@@ -470,6 +481,7 @@
                     });
             });
         });
+
 
 
         // === Функция добавления в сравнение ===
