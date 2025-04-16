@@ -436,6 +436,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+
         // === Функция добавления в wishlist ===
         document.querySelectorAll('.add-to-wishlist').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
@@ -457,8 +458,8 @@
                     })
                     .then(response => {
                         if (response.status === 401) {
-                            // Пользователь не авторизован — перенаправляем на регистрацию с параметром
-                            window.location.href = '/register?wishlist_product_id=' + productId;
+                            // Пользователь не авторизован — перенаправляем на логин с параметром
+                            window.location.href = '/login?wishlist_product_id=' + productId;
                             return;
                         }
 

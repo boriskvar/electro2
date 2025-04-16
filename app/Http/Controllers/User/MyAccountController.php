@@ -57,7 +57,6 @@ class MyAccountController extends Controller
         ]);
     }
 
-
     public function storeWishlist(Request $request)
     {
         $request->validate([
@@ -87,8 +86,6 @@ class MyAccountController extends Controller
         return response()->json(['success' => true, 'message' => 'Товар удалён из Wishlist.']);
     }
 
-
-
     // Страница "Cart"
     public function cart()
     {
@@ -107,53 +104,11 @@ class MyAccountController extends Controller
         ]);
     }
 
-
     // Страница "Orders"
     public function orders()
     {
         return view('user.my-account', ['activePage' => 'orders']);
     }
-
-
-
-    // Страница "Compare"
-    /*     public function compare()
-    {
-        // Получаем все атрибуты категории
-        $categoryAttributes = CategoryAttribute::all();
-        // dd($categoryAttributes);
-
-        // Получаем все товары, которые будем сравнивать
-        $comparisonProductIds = DB::table('comparison_product')->pluck('product_id');
-        $products = Product::whereIn('id', $comparisonProductIds)->with('attributes')->get();
-        // dd($products); //надо получить, не все товары, а только те что находятся в таблице comparison_product (со значением поля product_id)
-
-        $productData = [];
-
-        foreach ($products as $product) {
-            // Получаем атрибуты для каждого товара
-            $productAttributes = ProductCategoryAttribute::where('product_id', $product->id)->get()->keyBy('category_attribute_id');
-
-            $productData[] = [
-                'name' => $product->name,
-                'attributes' => $categoryAttributes->mapWithKeys(function ($attribute) use ($productAttributes) {
-                    // Для каждого атрибута, получаем значение из product_category_attributes
-                    // dd($attribute->attribute_name); //"processor" 
-                    return [$attribute->attribute_name => $productAttributes[$attribute->id]->value ?? '—'];
-                })->toArray(),
-                'price' => number_format($product->price, 0, '.', ' ') . ' грн',
-            ];
-        }
-        // dd($productData);
-        // Передаем все данные в представление
-        // return view('user.compare.index', compact('productData', 'categoryAttributes', 'products'));
-        return view('user.my-account', [
-            'productData' => $productData,
-            'categoryAttributes' => $categoryAttributes,
-            'products' => $products,
-            'activePage' => 'compare'  // Добавляем активную страницу
-        ]);
-    } */
 
     public function compare()
     {

@@ -65,6 +65,12 @@
     <!-- Подключение jQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
+    <script>
+        window.Laravel = {
+            isLoggedIn: @json(Auth::check())
+        };
+    </script>
+
 
 </body>
 
