@@ -122,11 +122,14 @@
                     <input type="hidden" name="wishlist_product_id" value="{{ request('wishlist_product_id') }}">
                     @endif
 
+                    @if (request()->has('compare_product_id'))
+                    <input type="hidden" name="compare_product_id" value="{{ request('compare_product_id') }}">
+                    @endif
+
+
                     <!-- Дополнительные кнопки -->
                     <ul class="product-btns">
-                        {{-- <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li> --}}
-                        <li><a href="#" class="add-to-wishlist" data-id="{{ $product->id }}" data-auth="{{ auth()->check() ? '1' : '0' }}"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
-                        {{-- <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li> --}}
+                        <li><a href="#" class="add-to-wishlist" data-id="{{ $product->id }}"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
                         <li><a href="#" class="add-to-compare" data-id="{{ $product->id }}"><i class="fa fa-exchange"></i> add to compare</a></li>
                     </ul>
 
@@ -491,6 +494,7 @@
                 e.preventDefault();
 
                 const productId = this.dataset.id;
+                const button = this;
 
                 fetch('/my-account/compare/add', {
                         method: 'POST'
@@ -503,16 +507,25 @@
                             product_id: productId
                         })
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (response.status === 401) {
+                            // Пользователь не авторизован — перенаправляем на логин с параметром
+                            window.location.href = '/login?compare_product_id=' + productId;
+
+                            return;
+                        }
+
+                        return response.json();
+                    })
                     .then(data => {
+                        if (!data) return; // мы уже перенаправили
+
                         if (data.success) {
                             alert(data.message || "Товар добавлен в сравнение!");
-                            // Тут можно изменить стиль кнопки, если хочешь
-                            // Например:
-                            this.innerHTML = '<i class="fa fa-exchange"></i> added';
-                            this.classList.add('disabled'); // если хочешь заблокировать повторный клик
+                            button.innerHTML = '<i class="fa fa-heart-o"></i> added';
+                            button.classList.add('disabled');
                         } else {
-                            alert("Ошибка: " + (data.message || "Не удалось добавить в сравнение"));
+                            alert('Ошибка: ' + (data.message || 'Не удалось добавить в список сравнения'));
                         }
                     })
                     .catch(error => {

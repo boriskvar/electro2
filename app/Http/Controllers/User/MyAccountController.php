@@ -152,23 +152,34 @@ class MyAccountController extends Controller
 
     public function addToCompare(Request $request)
     {
+        // Валидация, чтобы продукт существовал
         $request->validate([
             'product_id' => 'required|exists:products,id',
         ]);
 
-        $comparison = Comparison::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['created_at' => now(), 'updated_at' => now()] // Добавляем даты
-        );
+        // Если пользователь не авторизован
+        if (!Auth::check()) {
+            // Можно сохранить продукт в сессии для неавторизованных пользователей
+            session()->push('compare_products', $request->product_id);
 
-        // Убеждаемся, что у объекта есть ID
-        if (!$comparison->exists) {
-            $comparison->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Товар добавлен в сравнение, но для окончательного сохранения нужно авторизоваться.',
+                'redirect' => route('login') // Добавляем ссылку на страницу логина
+            ]);
         }
 
+        // Если пользователь авторизован, работаем с Comparison
+        $comparison = Comparison::firstOrCreate(
+            ['user_id' => Auth::id()],
+            ['created_at' => now(), 'updated_at' => now()]  // Устанавливаем даты
+        );
+
+
+
+        // Добавляем товар в сравнение (если он еще не был добавлен)
         $comparison->products()->syncWithoutDetaching([$request->product_id]);
 
-        // return redirect()->back()->with('success', 'Товар добавлен в сравнение.');
         return response()->json([
             'success' => true,
             'message' => 'Товар добавлен в сравнение.'

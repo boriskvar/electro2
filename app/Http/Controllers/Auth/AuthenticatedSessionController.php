@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Wishlist;
 use Illuminate\View\View;
+use App\Models\Comparison;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +37,6 @@ class AuthenticatedSessionController extends Controller
     {
         // Аутентификация пользователя
         $request->authenticate();
-        // $request->session()->regenerate();
         Session::regenerate(); // если нужно, но можно и оставить $request->session()->regenerate()
 
         $userId = Auth::id(); // <- через фасад
@@ -45,13 +46,13 @@ class AuthenticatedSessionController extends Controller
             $productId = request('wishlist_product_id');
 
             // Проверка, добавлен ли товар в wishlist
-            $exists = \App\Models\Wishlist::where('user_id', $userId)
+            $exists = Wishlist::where('user_id', $userId)
                 ->where('product_id', $productId)
                 ->exists();
 
             // Если товар не добавлен — добавляем его в список желаемого
             if (!$exists) {
-                \App\Models\Wishlist::create([
+                Wishlist::create([
                     'user_id' => Auth::id(),
                     'product_id' => $productId,
                 ]);
@@ -62,7 +63,40 @@ class AuthenticatedSessionController extends Controller
                 ->with('success', 'Товар добавлен в Wishlist!');
         }
 
-        // Редирект на страницу dashboard, если не передан wishlist_product_id
+
+        // ✅ Compare
+        if (request()->has('compare_product_id')) {
+            $productId = request('compare_product_id');
+
+            // Получаем или создаём запись в comparisons для текущего пользователя
+            $comparison = Comparison::firstOrCreate(
+                ['user_id' => $userId],
+                ['created_at' => now(), 'updated_at' => now()]
+            );
+
+            // На всякий случай сохраняем, если объект был только что создан
+            if (!$comparison->exists) {
+                $comparison->save();
+            }
+
+            // Проверяем, добавлен ли товар в сравнение
+            // $alreadyAttached = $comparison->products()->where('product_id', $productId)->exists();
+
+
+            /* if (!$alreadyAttached) {
+                $comparison->products()->attach($productId);
+            } */
+            if (!$comparison->products()->where('product_id', $productId)->exists()) {
+                $comparison->products()->attach($productId);
+            }
+
+            // Редирект на страницу товара
+            return redirect()->route('products.show', $productId)
+                ->with('success', 'Товар добавлен в сравнения!');
+        }
+
+
+        // 👇 стандартный редирект
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

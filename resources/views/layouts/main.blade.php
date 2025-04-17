@@ -33,10 +33,15 @@
 
 <body>
     {{-- Вставляем сразу после <body>, чтобы сообщение было вверху страницы --}}
-    @if (session('success'))
+    {{-- @if (session('success'))
     <div class="alert alert-success" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
         {{ session('success') }}
     </div>
+    @endif --}}
+    @if (session('success'))
+    <script>
+        alert(@json(session('success')));
+    </script>
     @endif
 
     <!-- Header -->

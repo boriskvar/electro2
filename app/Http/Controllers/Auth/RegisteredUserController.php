@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-
-use App\Models\Wishlist;
 use App\Models\Product;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Wishlist;
+use Illuminate\View\View;
+
+use App\Models\Comparison;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Auth\Events\Registered;
 
 class RegisteredUserController extends Controller
 {
@@ -51,7 +52,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // Внутри RegisteredUserController::store
+        // === Если передан товар для Wishlist ===
         if ($request->has('wishlist_product_id')) {
             $productId = $request->input('wishlist_product_id');
 
@@ -64,8 +65,26 @@ class RegisteredUserController extends Controller
                 ->with('success', $productId ? 'Товар добавлен в Wishlist!' : 'Регистрация прошла успешно');
         }
 
-        // return redirect(route('dashboard', absolute: false));
-        // fallback: если пользователь просто зарегистрировался
-        return redirect()->route('dashboard'); // или '/' если у тебя нет dashboard
+        // === Если передан товар для Compare ===
+        if ($request->has('compare_product_id')) {
+            $productId = $request->input('compare_product_id');
+
+            // Находим сравнение пользователя или создаём новое
+            $comparison = Comparison::firstOrCreate([
+                'user_id' => $user->id,
+            ]);
+
+            // Проверяем, есть ли уже связь с этим продуктом
+            $exists = $comparison->products()->where('product_id', $productId)->exists();
+
+            if (!$exists) {
+                $comparison->products()->attach($productId);
+            }
+
+            return redirect()->route('products.show', $productId)
+                ->with('success', 'Товар добавлен к сравнению!');
+        }
+
+        return redirect()->route('dashboard');  // или на главную: route('/')
     }
 }
