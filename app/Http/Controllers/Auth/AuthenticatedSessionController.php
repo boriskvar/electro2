@@ -41,7 +41,7 @@ class AuthenticatedSessionController extends Controller
 
         $userId = Auth::id(); // <- через фасад
 
-        // Проверка на наличие wishlist_product_id в запросе
+        // ✅ Проверка на наличие wishlist_product_id в запросе
         if (request()->has('wishlist_product_id')) {
             $productId = request('wishlist_product_id');
 

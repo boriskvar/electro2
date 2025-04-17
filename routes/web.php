@@ -15,7 +15,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\QuickViewController;
-use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\User\MyAccountController;
 
@@ -27,7 +26,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 // Публичные маршруты магазина
 Route::group([], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');  // Главная страница магазина
-    Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
+
+    // Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
     Route::get('/menus/{slug}/category/{category_slug}', [MenuController::class, 'category'])->name('menus.category.show');
     Route::get('menus/{slug}/page/{page_slug}', [MenuController::class, 'page'])->name('menus.page.show');
 
@@ -36,11 +36,13 @@ Route::group([], function () {
 
     // Страница поиска
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
-    // Для обычных страниц
+
+    // Для обычных страниц  (web.pages.about-us, web.pages.contact и т.д.)
     Route::get('/page/{slug}', [PageController::class, 'show'])->name('pages.show');
 
     // Детали продукта
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('products.show');
+    // Отзывы
     Route::post('/reviews', [ProductController::class, 'store'])->name('reviews.store');
 
     // Подписка на новости

@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
+
     // Показать все меню
-    // Показать все меню
-    public function index()
+    /* public function index()
     {
         // $homeMenu = Menu::where('is_home', true)->first();
 
@@ -32,7 +32,7 @@ class MenuController extends Controller
             ->get();
 
         return view('web.menus.index', compact('mainMenu', 'footerMenu'));  // Передаем в шаблон
-    }
+    } */
 
 
     // Показать конкретное меню по slug
