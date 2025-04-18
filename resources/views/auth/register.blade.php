@@ -2,6 +2,10 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        @if (request()->has('wishlist_product_id'))
+        <input type="hidden" name="wishlist_product_id" value="{{ request('wishlist_product_id') }}">
+        @endif
+
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -35,9 +39,22 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
+            {{-- <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+            {{ __('Already registered?') }}
+            </a> --}}
+            @if (request()->has('wishlist_product_id'))
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login', ['wishlist_product_id' => request('wishlist_product_id')]) }}">
+                {{ __('Already registered?') }}
+            </a>
+            @elseif (request()->has('compare_product_id'))
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login', ['compare_product_id' => request('compare_product_id')]) }}">
+                {{ __('Already registered?') }}
+            </a>
+            @else
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
+            @endif
 
             @if (request()->has('wishlist_product_id'))
             <input type="hidden" name="wishlist_product_id" value="{{ request('wishlist_product_id') }}">
@@ -47,5 +64,7 @@
                 {{ __('Register') }}
             </x-primary-button>
         </div>
+
+
     </form>
 </x-guest-layout>

@@ -35,31 +35,38 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         // dd($request->all());
-
+        //? 1. 🔐 Валидирует форму:
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
+        //? 2. 👤 Создаёт пользователя:
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+        //? 3. 📣 Триггерит событие Registered:
         event(new Registered($user));
-
+        //? 4. 🔑 Логинит пользователя сразу после регистрации:
         Auth::login($user);
 
-        // === Если передан товар для Wishlist ===
+        // === Если передан товар для Wishlist (обработка добавления в Wishlist:) ===
         if ($request->has('wishlist_product_id')) {
             $productId = $request->input('wishlist_product_id');
+            $userId = Auth::id();
 
-            Wishlist::create([
-                'user_id' => $user->id,
-                'product_id' => $productId,
-            ]);
+            $exists = Wishlist::where('user_id', $userId)
+                ->where('product_id', $productId)
+                ->exists();
+
+            if (!$exists) {
+                Wishlist::create([
+                    'user_id' => $userId,
+                    'product_id' => $productId,
+                ]);
+            }
 
             return redirect()->route('products.show', $productId ?? null)
                 ->with('success', $productId ? 'Товар добавлен в Wishlist!' : 'Регистрация прошла успешно');

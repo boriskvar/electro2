@@ -48,5 +48,19 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+
+        <!-- Register Redirect -->
+        <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-gray-600">
+                Нет аккаунта?
+                @php
+                $params = [];
+                if (request()->has('wishlist_product_id')) $params['wishlist_product_id'] = request('wishlist_product_id');
+                if (request()->has('compare_product_id')) $params['compare_product_id'] = request('compare_product_id');
+                @endphp
+                <a class="underline hover:text-gray-900" href="{{ route('register', $params) }}">Зарегистрируйтесь</a>
+            </p>
+        </div>
+
     </form>
 </x-guest-layout>
