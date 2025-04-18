@@ -8,6 +8,24 @@
         <div class="col-md-3">
             <div class="sidebar" style="border: 1px solid #D10024; " {{-- style="width: 150px;" --}}>
 
+                @auth
+                <div class="media" style="padding: 8px; background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+                    <div class="media-left">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#D10024" viewBox="0 0 24 24">
+                            <path d="M12 2a7 7 0 0 1 7 7c0 3.9-3.1 7-7 7s-7-3.1-7-7a7 7 0 0 1 7-7zm0 16c5.5 0 10 2.2 10 5v1H2v-1c0-2.8 4.5-5 10-5z" />
+                        </svg>
+                    </div>
+                    <div class="media-body" style="padding-left: 8px;">
+                        <strong style="font-size: 13px;">{{ Auth::user()->name }}</strong><br>
+                        <span style="font-size: 11px; color: #888;">{{ Auth::user()->email }}</span>
+                    </div>
+                </div>
+
+                @endauth
+
+
+
+
                 <a href="{{ route('my-account') }}" class="my-sidebar-item {{ $activePage === 'dashboard' ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('wishlist.index') }}" class="my-sidebar-item {{ $activePage === 'wishlist' ? 'active' : '' }}">My Wishlist</a>
                 <a href="{{ route('compare.index') }}" class="my-sidebar-item {{ $activePage === 'compare' ? 'active' : '' }}">Compare list</a>

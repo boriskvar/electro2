@@ -6,6 +6,10 @@
         <input type="hidden" name="wishlist_product_id" value="{{ request('wishlist_product_id') }}">
         @endif
 
+        @if (request()->has('compare_product_id'))
+        <input type="hidden" name="compare_product_id" value="{{ request('compare_product_id') }}">
+        @endif
+
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />

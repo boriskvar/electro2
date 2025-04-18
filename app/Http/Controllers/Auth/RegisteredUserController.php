@@ -55,15 +55,14 @@ class RegisteredUserController extends Controller
         // === Если передан товар для Wishlist (обработка добавления в Wishlist:) ===
         if ($request->has('wishlist_product_id')) {
             $productId = $request->input('wishlist_product_id');
-            $userId = Auth::id();
 
-            $exists = Wishlist::where('user_id', $userId)
+            $exists = Wishlist::where('user_id', $user->id)
                 ->where('product_id', $productId)
                 ->exists();
 
             if (!$exists) {
                 Wishlist::create([
-                    'user_id' => $userId,
+                    'user_id' => $user->id,
                     'product_id' => $productId,
                 ]);
             }
@@ -81,15 +80,17 @@ class RegisteredUserController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            // Проверяем, есть ли уже связь с этим продуктом
-            $exists = $comparison->products()->where('product_id', $productId)->exists();
+            // Проверяем, есть ли уже этот товар в списке сравнения
+            $exists = $comparison->products()
+                ->where('product_id', $productId)
+                ->exists();
 
             if (!$exists) {
                 $comparison->products()->attach($productId);
             }
 
-            return redirect()->route('products.show', $productId)
-                ->with('success', 'Товар добавлен к сравнению!');
+            return redirect()->route('products.show', $productId ?? null)
+                ->with('success', $productId ? 'Товар добавлен в Compare!' : 'Регистрация прошла успешно');
         }
 
         return redirect()->route('dashboard');  // или на главную: route('/')

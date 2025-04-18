@@ -453,7 +453,7 @@
                         , headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             , 'Content-Type': 'application/json'
-                            , 'Accept': 'application/json'
+                            , 'Accept': 'application/json' // ← ОБЯЗАТЕЛЕН!
                         }
                         , body: JSON.stringify({
                             product_id: productId
@@ -466,7 +466,7 @@
                             return;
                         }
 
-                        return response.json();
+                        return response.json(); // ← парсим JSON только если точно не 401
                     })
                     .then(data => {
                         if (!data) return; // мы уже перенаправили
@@ -501,7 +501,7 @@
                         , headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             , 'Content-Type': 'application/json'
-                            , 'Accept': 'application/json'
+                            , 'Accept': 'application/json' // ← ОБЯЗАТЕЛЕН!
                         }
                         , body: JSON.stringify({
                             product_id: productId
@@ -511,11 +511,10 @@
                         if (response.status === 401) {
                             // Пользователь не авторизован — перенаправляем на логин с параметром
                             window.location.href = '/login?compare_product_id=' + productId;
-
                             return;
                         }
 
-                        return response.json();
+                        return response.json(); // ← парсим JSON только если точно не 401
                     })
                     .then(data => {
                         if (!data) return; // мы уже перенаправили

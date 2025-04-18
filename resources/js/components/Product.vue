@@ -231,17 +231,32 @@ export default {
 
         // Метод добавления товара в сравнение
         addToCompare(product) {
+            // Скрываем старые сообщения об ошибках, если они были
+            window.dispatchEvent(
+                new CustomEvent('hideToast')  // Даем сигнал, чтобы скрыть старое сообщение
+            );
+
             fetch('/my-account/compare/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json', // ← ОБЯЗАТЕЛЕН!
                 },
                 body: JSON.stringify({ product_id: product.id }),
             })
-                .then((response) => response.json())
+                .then(response => {
+                    if (response.status === 401) {
+                        // Неавторизован — перенаправляем на страницу логина с параметром
+                        window.location.href = '/login?compare_product_id=' + product.id;
+                        throw new Error('Неавторизован'); // Важно выбрасывать исключение, чтобы не продолжать дальнейшее выполнение
+                    }
+
+                    return response.json(); // ← парсим JSON только если точно не 401
+                })
                 .then((data) => {
                     if (data.success) {
+                        // Показываем сообщение о том, что товар добавлен
                         window.dispatchEvent(
                             new CustomEvent('showToast', {
                                 detail: { message: 'Товар добавлен в сравнение', type: 'success' },
@@ -249,6 +264,7 @@ export default {
                         );
                         location.reload();
                     } else {
+                        // Показываем ошибку, если что-то пошло не так на сервере
                         window.dispatchEvent(
                             new CustomEvent('showToast', {
                                 detail: { message: data.message, type: 'error' },
@@ -257,6 +273,8 @@ export default {
                     }
                 })
                 .catch((error) => {
+                    if (error.message === 'Неавторизован') return; // Ожидаемое поведение для 401, ничего не делаем
+
                     console.error('Ошибка при добавлении в сравнение:', error);
                     window.dispatchEvent(
                         new CustomEvent('showToast', {
