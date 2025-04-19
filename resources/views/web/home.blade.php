@@ -123,7 +123,13 @@
                                                     <i class="fa fa-heart-o"></i>
                                                     <span class="tooltipp">add to wishlist</span>
                                                 </button>
-                                                <button class="add-to-compare" onclick="addToCompare({{ $product->id }})"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+
+                                                {{-- <button class="add-to-compare" onclick="addToCompare({{ $product->id }})"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button> --}}
+                                                <button class="add-to-compare" data-id="{{ $product->id }}">
+                                                    <i class="fa fa-exchange"></i>
+                                                    <span class="tooltipp">add to compare</span>
+                                                </button>
+
                                                 <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                                             </div>
 
@@ -279,7 +285,12 @@
                                                     <span class="tooltipp">add to wishlist</span>
                                                 </button>
 
-                                                <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                                                {{-- <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button> --}}
+                                                <button class="add-to-compare" data-id="{{ $product->id }}">
+                                                    <i class="fa fa-exchange"></i>
+                                                    <span class="tooltipp">add to compare</span>
+                                                </button>
+
                                                 {{-- <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button> --}}
                                                 <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                                             </div>
@@ -551,38 +562,38 @@
 
 
         // === Функция добавления в сравнение ===
-        window.addToCompare = function(productId) {
-            console.log("Добавление в сравнение:", productId);
+        /*         window.addToCompare = function(productId) {
+                    console.log("Добавление в сравнение:", productId);
 
-            fetch('/my-account/compare/add', {
-                    method: 'POST'
-                    , headers: {
-                        'Content-Type': 'application/json'
-                        , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                    , body: JSON.stringify({
-                        product_id: productId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Товар добавлен в сравнение!");
-                        // Меняем иконку и блокируем кнопку
-                        let btn = document.querySelector(`button[onclick="addToCompare(${productId})"]`);
-                        if (btn) {
-                            btn.innerHTML = '<i class="fa fa-exchange"></i><span class="tooltipp">added</span>';
-                            btn.disabled = true; // Отключаем кнопку
-                        }
-                    } else {
-                        alert("Ошибка при добавлении в сравнение");
-                    }
-                })
-                .catch(error => {
-                    console.error("Ошибка добавления в сравнение:", error);
-                    alert("Ошибка при добавлении товара в сравнение");
-                });
-        };
+                    fetch('/my-account/compare/add', {
+                            method: 'POST'
+                            , headers: {
+                                'Content-Type': 'application/json'
+                                , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            }
+                            , body: JSON.stringify({
+                                product_id: productId
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Товар добавлен в сравнение!");
+                                // Меняем иконку и блокируем кнопку
+                                let btn = document.querySelector(`button[onclick="addToCompare(${productId})"]`);
+                                if (btn) {
+                                    btn.innerHTML = '<i class="fa fa-exchange"></i><span class="tooltipp">added</span>';
+                                    btn.disabled = true; // Отключаем кнопку
+                                }
+                            } else {
+                                alert("Ошибка при добавлении в сравнение");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Ошибка добавления в сравнение:", error);
+                            alert("Ошибка при добавлении товара в сравнение");
+                        });
+                }; */
     });
 </script>
 

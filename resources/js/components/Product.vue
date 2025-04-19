@@ -43,11 +43,11 @@
                         }"></i>
                     </div>
                     <div class="product-btns">
-                        <button class="add-to-wishlist" @click="addToWishlist(product)">
+                        <button class="add-to-wishlist" :data-id="product.id">
                             <i class="fa fa-heart-o"></i>
                             <span class="tooltipp">add to wishlist</span>
                         </button>
-                        <button class="add-to-compare" @click="addToCompare(product)">
+                        <button class="add-to-compare" :data-id="product.id">
                             <i class="fa fa-exchange"></i>
                             <span class="tooltipp">add to compare</span>
                         </button>
@@ -183,7 +183,61 @@ export default {
         // ✅ Метод добавления товара в Wishlist
 
         /*         addToWishlist(product) {
-                    fetch('/my-account/wishlist/store', {
+                            fetch('/my-account/wishlist/store', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                    'Accept': 'application/json', // ← ОБЯЗАТЕЛЕН!
+                                },
+                                body: JSON.stringify({ product_id: product.id }),
+                            })
+                                .then((response) => {
+                                    if (response.status === 401) {
+                                        // Неавторизован — редиректим и выбрасываем исключение, чтобы не шли дальше в цепочку
+                                        window.location.href = '/login?wishlist_product_id=' + product.id;
+                                        throw new Error('Неавторизован'); // ← важный шаг!
+                                    }
+                                    return response.json();  // ← парсим JSON только если точно не 401
+                                })
+                                .then((data) => {
+                                    if (data.success) {
+                                        window.dispatchEvent(
+                                            new CustomEvent('showToast', {
+                                                detail: { message: 'Товар добавлен в Wishlist', type: 'success' },
+                                            })
+                                        );
+                                        // Обновление (перезагрузка) страницы
+                                        location.reload(); // или обнови локальное состояние, если не хочешь перезагрузку
+                                    } else {
+                                        window.dispatchEvent(
+                                            new CustomEvent('showToast', {
+                                                detail: { message: data.message, type: 'error' },
+                                            })
+                                        );
+                                    }
+                                })
+                                .catch((error) => {
+                                    if (error.message === 'Неавторизован') return; // ничего не делаем, это ожидаемое поведение
+                
+                                    console.error('Ошибка при добавлении в Wishlist:', error);
+                                    window.dispatchEvent(
+                                        new CustomEvent('showToast', {
+                                            detail: { message: 'Ошибка при добавлении в Wishlist', type: 'error' },
+                                        })
+                                    );
+                                });
+                        }, 
+                */
+
+        // Метод добавления товара в сравнение
+        /*         addToCompare(product) {
+                    // Скрываем старые сообщения об ошибках, если они были
+                    window.dispatchEvent(
+                        new CustomEvent('hideToast')  // Даем сигнал, чтобы скрыть старое сообщение
+                    );
+        
+                    fetch('/my-account/compare/add', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -192,24 +246,26 @@ export default {
                         },
                         body: JSON.stringify({ product_id: product.id }),
                     })
-                        .then((response) => {
+                        .then(response => {
                             if (response.status === 401) {
-                                // Неавторизован — редиректим и выбрасываем исключение, чтобы не шли дальше в цепочку
-                                window.location.href = '/login?wishlist_product_id=' + product.id;
-                                throw new Error('Неавторизован'); // ← важный шаг!
+                                // Неавторизован — перенаправляем на страницу логина с параметром
+                                window.location.href = '/login?compare_product_id=' + product.id;
+                                throw new Error('Неавторизован'); // Важно выбрасывать исключение, чтобы не продолжать дальнейшее выполнение
                             }
-                            return response.json();  // ← парсим JSON только если точно не 401
+        
+                            return response.json(); // ← парсим JSON только если точно не 401
                         })
                         .then((data) => {
                             if (data.success) {
+                                // Показываем сообщение о том, что товар добавлен
                                 window.dispatchEvent(
                                     new CustomEvent('showToast', {
-                                        detail: { message: 'Товар добавлен в Wishlist', type: 'success' },
+                                        detail: { message: 'Товар добавлен в сравнение', type: 'success' },
                                     })
                                 );
-                                // Обновление (перезагрузка) страницы
-                                location.reload(); // или обнови локальное состояние, если не хочешь перезагрузку
+                                location.reload();
                             } else {
+                                // Показываем ошибку, если что-то пошло не так на сервере
                                 window.dispatchEvent(
                                     new CustomEvent('showToast', {
                                         detail: { message: data.message, type: 'error' },
@@ -218,72 +274,16 @@ export default {
                             }
                         })
                         .catch((error) => {
-                            if (error.message === 'Неавторизован') return; // ничего не делаем, это ожидаемое поведение
+                            if (error.message === 'Неавторизован') return; // Ожидаемое поведение для 401, ничего не делаем
         
-                            console.error('Ошибка при добавлении в Wishlist:', error);
+                            console.error('Ошибка при добавлении в сравнение:', error);
                             window.dispatchEvent(
                                 new CustomEvent('showToast', {
-                                    detail: { message: 'Ошибка при добавлении в Wishlist', type: 'error' },
+                                    detail: { message: 'Ошибка при добавлении в сравнение', type: 'error' },
                                 })
                             );
                         });
-                }, 
-        */
-
-        // Метод добавления товара в сравнение
-        addToCompare(product) {
-            // Скрываем старые сообщения об ошибках, если они были
-            window.dispatchEvent(
-                new CustomEvent('hideToast')  // Даем сигнал, чтобы скрыть старое сообщение
-            );
-
-            fetch('/my-account/compare/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json', // ← ОБЯЗАТЕЛЕН!
-                },
-                body: JSON.stringify({ product_id: product.id }),
-            })
-                .then(response => {
-                    if (response.status === 401) {
-                        // Неавторизован — перенаправляем на страницу логина с параметром
-                        window.location.href = '/login?compare_product_id=' + product.id;
-                        throw new Error('Неавторизован'); // Важно выбрасывать исключение, чтобы не продолжать дальнейшее выполнение
-                    }
-
-                    return response.json(); // ← парсим JSON только если точно не 401
-                })
-                .then((data) => {
-                    if (data.success) {
-                        // Показываем сообщение о том, что товар добавлен
-                        window.dispatchEvent(
-                            new CustomEvent('showToast', {
-                                detail: { message: 'Товар добавлен в сравнение', type: 'success' },
-                            })
-                        );
-                        location.reload();
-                    } else {
-                        // Показываем ошибку, если что-то пошло не так на сервере
-                        window.dispatchEvent(
-                            new CustomEvent('showToast', {
-                                detail: { message: data.message, type: 'error' },
-                            })
-                        );
-                    }
-                })
-                .catch((error) => {
-                    if (error.message === 'Неавторизован') return; // Ожидаемое поведение для 401, ничего не делаем
-
-                    console.error('Ошибка при добавлении в сравнение:', error);
-                    window.dispatchEvent(
-                        new CustomEvent('showToast', {
-                            detail: { message: 'Ошибка при добавлении в сравнение', type: 'error' },
-                        })
-                    );
-                });
-        },
+                }, */
     },
 };
 </script>
