@@ -182,52 +182,53 @@ export default {
 
         // ✅ Метод добавления товара в Wishlist
 
-        addToWishlist(product) {
-            fetch('/my-account/wishlist/store', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json', // ← ОБЯЗАТЕЛЕН!
-                },
-                body: JSON.stringify({ product_id: product.id }),
-            })
-                .then((response) => {
-                    if (response.status === 401) {
-                        // Неавторизован — редиректим и выбрасываем исключение, чтобы не шли дальше в цепочку
-                        window.location.href = '/login?wishlist_product_id=' + product.id;
-                        throw new Error('Неавторизован'); // ← важный шаг!
-                    }
-                    return response.json();  // ← парсим JSON только если точно не 401
-                })
-                .then((data) => {
-                    if (data.success) {
-                        window.dispatchEvent(
-                            new CustomEvent('showToast', {
-                                detail: { message: 'Товар добавлен в Wishlist', type: 'success' },
-                            })
-                        );
-                        // Обновление (перезагрузка) страницы
-                        location.reload(); // или обнови локальное состояние, если не хочешь перезагрузку
-                    } else {
-                        window.dispatchEvent(
-                            new CustomEvent('showToast', {
-                                detail: { message: data.message, type: 'error' },
-                            })
-                        );
-                    }
-                })
-                .catch((error) => {
-                    if (error.message === 'Неавторизован') return; // ничего не делаем, это ожидаемое поведение
-
-                    console.error('Ошибка при добавлении в Wishlist:', error);
-                    window.dispatchEvent(
-                        new CustomEvent('showToast', {
-                            detail: { message: 'Ошибка при добавлении в Wishlist', type: 'error' },
+        /*         addToWishlist(product) {
+                    fetch('/my-account/wishlist/store', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json', // ← ОБЯЗАТЕЛЕН!
+                        },
+                        body: JSON.stringify({ product_id: product.id }),
+                    })
+                        .then((response) => {
+                            if (response.status === 401) {
+                                // Неавторизован — редиректим и выбрасываем исключение, чтобы не шли дальше в цепочку
+                                window.location.href = '/login?wishlist_product_id=' + product.id;
+                                throw new Error('Неавторизован'); // ← важный шаг!
+                            }
+                            return response.json();  // ← парсим JSON только если точно не 401
                         })
-                    );
-                });
-        },
+                        .then((data) => {
+                            if (data.success) {
+                                window.dispatchEvent(
+                                    new CustomEvent('showToast', {
+                                        detail: { message: 'Товар добавлен в Wishlist', type: 'success' },
+                                    })
+                                );
+                                // Обновление (перезагрузка) страницы
+                                location.reload(); // или обнови локальное состояние, если не хочешь перезагрузку
+                            } else {
+                                window.dispatchEvent(
+                                    new CustomEvent('showToast', {
+                                        detail: { message: data.message, type: 'error' },
+                                    })
+                                );
+                            }
+                        })
+                        .catch((error) => {
+                            if (error.message === 'Неавторизован') return; // ничего не делаем, это ожидаемое поведение
+        
+                            console.error('Ошибка при добавлении в Wishlist:', error);
+                            window.dispatchEvent(
+                                new CustomEvent('showToast', {
+                                    detail: { message: 'Ошибка при добавлении в Wishlist', type: 'error' },
+                                })
+                            );
+                        });
+                }, 
+        */
 
         // Метод добавления товара в сравнение
         addToCompare(product) {

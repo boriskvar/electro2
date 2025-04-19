@@ -441,50 +441,51 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         // === Функция добавления в wishlist ===
-        document.querySelectorAll('.add-to-wishlist').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
+        /*         document.querySelectorAll('.add-to-wishlist').forEach(function(btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
 
-                const productId = this.dataset.id;
-                const button = this;
+                        const productId = this.dataset.id;
+                        const button = this;
 
-                fetch('/my-account/wishlist/store', {
-                        method: 'POST'
-                        , headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            , 'Content-Type': 'application/json'
-                            , 'Accept': 'application/json' // ← ОБЯЗАТЕЛЕН!
-                        }
-                        , body: JSON.stringify({
-                            product_id: productId
-                        })
-                    })
-                    .then(response => {
-                        if (response.status === 401) {
-                            // Пользователь не авторизован — перенаправляем на логин с параметром
-                            window.location.href = '/login?wishlist_product_id=' + productId;
-                            return;
-                        }
+                        fetch('/my-account/wishlist/store', {
+                                method: 'POST'
+                                , headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    , 'Content-Type': 'application/json'
+                                    , 'Accept': 'application/json' // ← ОБЯЗАТЕЛЕН!
+                                }
+                                , body: JSON.stringify({
+                                    product_id: productId
+                                })
+                            })
+                            .then(response => {
+                                if (response.status === 401) {
+                                    // Пользователь не авторизован — перенаправляем на логин с параметром
+                                    window.location.href = '/login?wishlist_product_id=' + productId;
+                                    return;
+                                }
 
-                        return response.json(); // ← парсим JSON только если точно не 401
-                    })
-                    .then(data => {
-                        if (!data) return; // мы уже перенаправили
+                                return response.json(); // ← парсим JSON только если точно не 401
+                            })
+                            .then(data => {
+                                if (!data) return; // мы уже перенаправили
 
-                        if (data.success) {
-                            alert(data.message || "Товар добавлен в список желаний!");
-                            button.innerHTML = '<i class="fa fa-heart-o"></i> added';
-                            button.classList.add('disabled');
-                        } else {
-                            alert('Ошибка: ' + (data.message || 'Не удалось добавить в Wishlist'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Ошибка при добавлении в wishlist:', error);
-                        alert('Произошла ошибка');
+                                if (data.success) {
+                                    alert(data.message || "Товар добавлен в список желаний!");
+                                    button.innerHTML = '<i class="fa fa-heart-o"></i> added';
+                                    button.classList.add('disabled');
+                                } else {
+                                    alert('Ошибка: ' + (data.message || 'Не удалось добавить в Wishlist'));
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Ошибка при добавлении в wishlist:', error);
+                                alert('Произошла ошибка');
+                            });
                     });
-            });
-        });
+                }); 
+        */
 
 
 

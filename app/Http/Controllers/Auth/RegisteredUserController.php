@@ -41,17 +41,21 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
         //? 2. 👤 Создаёт пользователя:
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
         //? 3. 📣 Триггерит событие Registered:
         event(new Registered($user));
+
         //? 4. 🔑 Логинит пользователя сразу после регистрации:
         Auth::login($user);
 
+        //? ✅ Если передан wishlist_product_id:
         // === Если передан товар для Wishlist (обработка добавления в Wishlist:) ===
         if ($request->has('wishlist_product_id')) {
             $productId = $request->input('wishlist_product_id');
@@ -93,6 +97,7 @@ class RegisteredUserController extends Controller
                 ->with('success', $productId ? 'Товар добавлен в Compare!' : 'Регистрация прошла успешно');
         }
 
+        //? ✅ Если ничего не передано — обычный редирект:
         return redirect()->route('dashboard');  // или на главную: route('/')
     }
 }

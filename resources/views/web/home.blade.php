@@ -118,7 +118,11 @@
                                                     @endfor
                                             </div>
                                             <div class="product-btns">
-                                                <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                                {{-- <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button> --}}
+                                                <button class="add-to-wishlist" data-id="{{ $product->id }}">
+                                                    <i class="fa fa-heart-o"></i>
+                                                    <span class="tooltipp">add to wishlist</span>
+                                                </button>
                                                 <button class="add-to-compare" onclick="addToCompare({{ $product->id }})"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
                                                 <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                                             </div>
@@ -269,7 +273,12 @@
                                                     @endfor
                                             </div>
                                             <div class="product-btns">
-                                                <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                                {{-- <button class="add-to-wishlist" onclick="addToWishlist({{ $product->id }})"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button> --}}
+                                                <button class="add-to-wishlist" data-id="{{ $product->id }}">
+                                                    <i class="fa fa-heart-o"></i>
+                                                    <span class="tooltipp">add to wishlist</span>
+                                                </button>
+
                                                 <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
                                                 {{-- <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button> --}}
                                                 <button class="quick-view" @click="$refs.quickModal.quickView({{ $product->id }})"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
@@ -482,39 +491,64 @@
                     showToast("Ошибка при добавлении товара", "error");
                 });
         };
-        // === Функция добавления в wishlist ===
-        window.addToWishlist = function(productId) {
-            console.log("Добавление в wishlist:", productId);
 
-            fetch('/my-account/wishlist/store', {
-                    method: 'POST'
-                    , headers: {
-                        'Content-Type': 'application/json'
-                        , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
+        // === Функция добавления в wishlist ===
+        /*         document.addEventListener('DOMContentLoaded', function() {
+                    console.log('Скрипт загружен'); // ← добавь это!
+
+                    const tabsContainer = document.querySelector('.products-tabs');
+
+                    if (tabsContainer) {
+                        tabsContainer.addEventListener('click', function(e) {
+                            const button = e.target.closest('.add-to-wishlist');
+                            if (!button) return; // клик не по нужной кнопке
+
+                            e.preventDefault();
+
+                            // const productId = button.dataset.id; // ❌ this указывает на tabsContainer, а не на кнопку
+                            const productId = button.dataset.id; // ✅ вот теперь корректно
+                            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                            fetch('/my-account/wishlist/store', {
+                                    method: 'POST'
+                                    , headers: {
+                                        'Content-Type': 'application/json'
+                                        , 'X-CSRF-TOKEN': token
+                                        , 'Accept': 'application/json'
+                                    }
+                                    , body: JSON.stringify({
+                                        product_id: productId
+                                    })
+                                })
+                                .then((response) => {
+                                    if (response.status === 401) {
+                                        window.location.href = '/login?wishlist_product_id=' + productId;
+                                        throw new Error('Неавторизован');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (!data) return;
+
+                                    if (data.success) {
+                                        alert(data.message || "Товар добавлен в список желаний!");
+                                        button.innerHTML = '<i class="fa fa-heart-o"></i> added';
+                                        button.classList.add('disabled');
+                                    } else {
+                                        alert('Ошибка: ' + (data.message || 'Не удалось добавить в Wishlist'));
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Ошибка при добавлении в wishlist:', error);
+                                    alert('Произошла ошибка');
+                                });
+                        });
                     }
-                    , body: JSON.stringify({
-                        product_id: productId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Товар добавлен в список желаемого!");
-                        // Меняем иконку сердечка и блокируем кнопку
-                        let btn = document.querySelector(`button[onclick="addToWishlist(${productId})"]`);
-                        if (btn) {
-                            btn.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">added</span>';
-                            btn.disabled = true; // Отключаем кнопку после добавления
-                        }
-                    } else {
-                        alert("Ошибка при добавлении в Wishlist");
-                    }
-                })
-                .catch(error => {
-                    console.error("Ошибка добавления в wishlist:", error);
-                    alert("Ошибка при добавлении товара в Wishlist");
                 });
-        };
+                 */
+
+
 
         // === Функция добавления в сравнение ===
         window.addToCompare = function(productId) {
@@ -549,8 +583,6 @@
                     alert("Ошибка при добавлении товара в сравнение");
                 });
         };
-
-
     });
 </script>
 
